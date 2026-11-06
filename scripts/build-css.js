@@ -39,7 +39,8 @@ execFileSync("npx", ["--yes", TAILWIND, "-c", path.join(root, "tailwind.config.j
 const css = fs.readFileSync(outPath, "utf8").trim();
 // Last thing in <head>, like the runtime compiler was, so utilities (md:hidden…) win over the page's own component CSS
 html = html.replace(new RegExp(`\\s*${blockRe.source}`), "");
-html = html.replace("</head>", `  ${OPEN}${css}</style>\n</head>`);
+// Function replacer: "$&" or "$'" inside the CSS must stay literal
+html = html.replace("</head>", () => `  ${OPEN}${css}</style>\n</head>`);
 fs.writeFileSync(htmlPath, html);
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`Inlined ${(css.length / 1024).toFixed(1)} KB of Tailwind CSS into index.html`);
