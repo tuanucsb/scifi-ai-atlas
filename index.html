@@ -8344,7 +8344,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
     function computeNodePositions() {
       const padX = 92;
       const padY = 76;
-      const usableW = Math.max(820, width - padX * 2);
+      const usableW = Math.max(600, width - padX * 2);
       const usableH = Math.max(520, height - padY * 2);
 
       for (let s = 1; s <= 7; s++) {
@@ -8558,14 +8558,14 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
       // Draw 7 Stage Column Bands & Headers
       const padX = 92;
-      const usableW = Math.max(820, width - padX * 2);
+      const usableW = Math.max(600, width - padX * 2);
       STAGES.forEach((st, i) => {
-        const colX = padX + (i / 6) * usableW;
+        const colX = state.camera.x + (padX + (i / 6) * usableW) * state.camera.zoom;
         const isCurrentStage = selectedNode && selectedNode.stage === st.id;
 
         if (isCurrentStage) {
           ctx.fillStyle = `rgb(${accentRgb} / ${isLight ? 0.06 : 0.07})`;
-          ctx.fillRect(colX - 58, 6, 116, height - 16);
+          ctx.fillRect(colX - 58 * state.camera.zoom, 6, 116 * state.camera.zoom, height - 16);
         }
 
         ctx.beginPath();
@@ -8577,13 +8577,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         ctx.stroke();
         ctx.setLineDash([]);
 
-        ctx.font = "bold 11px ui-monospace, monospace";
+        ctx.font = "600 12px 'IBM Plex Mono', monospace";
         ctx.textAlign = "center";
         ctx.fillStyle = isCurrentStage ? `rgb(${accentFgRgb})` : textMuted;
         ctx.fillText(st.roman.toUpperCase(), colX, 18);
-        ctx.font = "600 10px sans-serif";
+        ctx.font = "500 11px 'IBM Plex Sans', sans-serif";
         ctx.fillStyle = isCurrentStage ? textMain : textMuted;
-        ctx.fillText(st.shortLabel, colX, 32);
+        // Stage name only when it fits between columns (the current stage always shows it)
+        const colGap = (usableW / 6) * state.camera.zoom - 8;
+        if (isCurrentStage || ctx.measureText(st.shortLabel).width <= colGap) ctx.fillText(st.shortLabel, colX, 32);
       });
 
       // Horizontal Equator Line (Neutral Valence = 0)
@@ -8693,6 +8695,11 @@ npx firebase-tools@latest deploy --only hosting</pre>
         });
       }
 
+      // Hub labels are queued here and placed after the satellites, highest priority first, skipping any that collide
+      const labelQueue = [];
+      const placedBoxes = [];
+      const overlaps = (b) => placedBoxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
+
       // Draw Scenario Hub Nodes (Prominent r=22..28 Scenario Hubs; declutter background labels near active orbit)
       NODES.forEach(node => {
         const active = isNodeHighlighted(node);
@@ -8788,34 +8795,11 @@ npx firebase-tools@latest deploy --only hosting</pre>
           ctx.fillText(relLabel, node.x, ry + 6);
         }
 
-        // Draw Scenario Hub Label (Suppress unselected labels inside the active satellite orbit zone so nothing collides!)
-        if (!inSelectedOrbitZone) {
-          const shortTitle = node.title.length > 22 ? node.title.slice(0, 21) + "…" : node.title;
-          ctx.font = isSelected ? "bold 10.5px sans-serif" : "600 9.5px sans-serif";
-          const titleW = ctx.measureText(shortTitle).width;
-
-          if (isRelatedToFocus || state.activePathway !== "all") {
-            const pillW = titleW + 10;
-            const pillH = 16;
-            const pillX = node.x - pillW / 2;
-            const pillY = node.y + r + 4;
-
-            ctx.fillStyle = cardBg;
-            roundRect(ctx, pillX, pillY, pillW, pillH, 4);
-            ctx.fill();
-            ctx.lineWidth = isSelected ? 1.4 : 0.8;
-            ctx.strokeStyle = isSelected ? col.fill : gridCol;
-            ctx.stroke();
-
-            ctx.fillStyle = textMain;
-            ctx.textBaseline = "middle";
-            ctx.fillText(shortTitle, node.x, pillY + pillH / 2 + 0.5);
-          } else {
-            // Unfocused background node: subtle plain text, no heavy box
-            ctx.fillStyle = textMuted;
-            ctx.textBaseline = "top";
-            ctx.fillText(shortTitle, node.x, node.y + r + 4);
-          }
+        // Selected, hovered and linked hubs always get a label; the rest only when zoomed in (≥ 1.3)
+        const inPath = state.activePathway !== "all" && active;
+        const priority = isSelected ? 0 : isHovered ? 1 : (isIncoming || isOutgoing) ? 2 : inPath ? 3 : 4;
+        if (priority < 4 || state.camera.zoom >= 1.3) {
+          labelQueue.push({ node, r, col, priority, isSelected, boxed: priority < 4, alpha: ctx.globalAlpha });
         }
 
         ctx.restore();
@@ -8948,6 +8932,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
               ctx.textAlign = "center";
               ctx.textBaseline = "middle";
               ctx.fillText(shortWork, lx + tw / 2, ly + th / 2 + 0.5);
+              placedBoxes.push({ x: lx, y: ly, w: tw, h: th });
             } else {
               // Unclustered plain text outside the small satellite icon
               ctx.fillStyle = textMuted;
@@ -8955,12 +8940,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
               if (cosA > 0.2) {
                 ctx.textAlign = "left";
                 ctx.fillText(shortWork, sx + offset, sy);
+                placedBoxes.push({ x: sx + offset, y: sy - th / 2, w: tw, h: th });
               } else if (cosA < -0.2) {
                 ctx.textAlign = "right";
                 ctx.fillText(shortWork, sx - offset, sy);
+                placedBoxes.push({ x: sx - offset - tw, y: sy - th / 2, w: tw, h: th });
               } else {
                 ctx.textAlign = "center";
                 ctx.fillText(shortWork, sx, sy - 11);
+                placedBoxes.push({ x: sx - tw / 2, y: sy - 11 - th / 2, w: tw, h: th });
               }
             }
           }
@@ -8978,6 +8966,35 @@ npx firebase-tools@latest deploy --only hosting</pre>
             node: node
           });
         }
+      });
+
+      // Place hub labels: priority order, drop on collision with anything already placed
+      labelQueue.sort((a, b) => a.priority - b.priority);
+      labelQueue.forEach(({ node, r, col, isSelected, boxed, alpha }) => {
+        const shortTitle = node.title.length > 26 ? node.title.slice(0, 25) + "…" : node.title;
+        ctx.font = isSelected ? "600 12px 'IBM Plex Sans', sans-serif" : "500 11px 'IBM Plex Sans', sans-serif";
+        const w = ctx.measureText(shortTitle).width + (boxed ? 12 : 4);
+        const h = boxed ? 18 : 14;
+        const box = { x: node.x - w / 2, y: node.y + r + 4, w, h };
+        if (!isSelected && overlaps(box)) return;
+        placedBoxes.push(box);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        if (boxed) {
+          ctx.fillStyle = cardBg;
+          roundRect(ctx, box.x, box.y, w, h, 4);
+          ctx.fill();
+          ctx.lineWidth = isSelected ? 1.4 : 0.8;
+          ctx.strokeStyle = isSelected ? col.fill : gridCol;
+          ctx.stroke();
+          ctx.fillStyle = textMain;
+        } else {
+          ctx.fillStyle = textMuted;
+        }
+        ctx.fillText(shortTitle, node.x, box.y + h / 2 + 0.5);
+        ctx.restore();
       });
 
       ctx.restore();
@@ -9083,6 +9100,19 @@ npx firebase-tools@latest deploy --only hosting</pre>
       const rect = canvas.getBoundingClientRect();
       const sx = e.clientX - rect.left;
       const sy = e.clientY - rect.top;
+      if (sy < RULER_H) {
+        const padX = 92, usableW = Math.max(600, width - padX * 2);
+        let best = null, bestD = 70;
+        STAGES.forEach((st, i) => {
+          const d = Math.abs(state.camera.x + (padX + (i / 6) * usableW) * state.camera.zoom - sx);
+          if (d < bestD) { bestD = d; best = st; }
+        });
+        if (best) {
+          const first = NODES.find(n => n.stage === best.id);
+          if (first) selectStage(best.id, first.id);
+          return;
+        }
+      }
       const { x: wx, y: wy } = screenToWorld(sx, sy);
 
       const hitSat = findSatelliteAt(wx, wy);
@@ -9184,8 +9214,19 @@ npx firebase-tools@latest deploy --only hosting</pre>
     }
 
     function resetCamera() {
-      state.camera = { x: 0, y: 0, zoom: 1 };
       computeNodePositions();
+      fitGraph();
+    }
+
+    const RULER_H = 44;
+    function fitGraph() {
+      const xs = NODES.map(n => n.x), ys = NODES.map(n => n.y);
+      const minX = Math.min(...xs) - 80, maxX = Math.max(...xs) + 80;
+      const minY = Math.min(...ys) - 50, maxY = Math.max(...ys) + 60;
+      const zoom = Math.max(0.5, Math.min(1.2, width / (maxX - minX), (height - RULER_H) / (maxY - minY)));
+      state.camera.zoom = zoom;
+      state.camera.x = (width - (maxX - minX) * zoom) / 2 - minX * zoom;
+      state.camera.y = RULER_H + ((height - RULER_H) - (maxY - minY) * zoom) / 2 - minY * zoom;
     }
 
     function toggleParticles() {
@@ -9825,7 +9866,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
         if (btn) btn.setAttribute("aria-selected", v === view ? "true" : "false");
       });
       document.getElementById("filter-details")?.parentElement.classList.toggle("hidden", view === "hosting" || view === "life30" || view === "flowguide");
-      if (view === "graph") resizeCanvas();
+      if (view === "graph") { resizeCanvas(); fitGraph(); }
       if (view === "life30") renderLife30View();
       if (view === "characters") renderCharactersView();
       if (view === "timeline") renderTimelineView();
@@ -9932,6 +9973,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
     window.addEventListener("resize", () => {
       resizeCanvas();
+      resetCamera();
     });
 
     // Short saga names for the filter dropdown (PATHWAYS names are long descriptions)
@@ -9966,6 +10008,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
       }
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches && state.particlesOn) toggleParticles();
       resizeCanvas();
+      resetCamera();
       initParticles();
       renderStageStepper();
       renderWorksStrip();
