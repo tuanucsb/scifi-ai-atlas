@@ -126,16 +126,6 @@
     html.light .align-Amoral     { background: #dbeafe; color: #1e40af; border-color: #60a5fa; }
     html.light .align-Liberated  { background: #fef3c7; color: #92400e; border-color: #fbbf24; }
 
-    /* Keyboard focus ring in the theme accent (overrides Tailwind focus:outline-none on inputs) */
-    :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
-    /* Finger-sized filter chips on touch screens */
-    @media (pointer: coarse) {
-      .filter-bar button, .filter-bar input, header button { min-height: 40px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
-    }
-
     @media (forced-colors: active) {
       .robot-panel, button, input, select {
         border: 1px solid ButtonText;
@@ -149,21 +139,21 @@
 <body class="bg-[var(--background)] text-[var(--foreground)] antialiased min-h-screen flex flex-col">
 
   <!-- Top Header & High-Contrast CORUM Navigation Controls -->
-  <header class="bg-[var(--card)] border-b border-[var(--border)] robot-panel px-4 py-2.5 md:sticky md:top-0 z-30 shadow-md">
+  <header class="bg-[var(--card)] border-b border-[var(--border)] robot-panel px-4 py-2.5 sticky top-0 z-30 shadow-md">
     <div class="max-w-[1780px] mx-auto flex flex-col gap-2">
       <div class="flex flex-wrap items-center justify-between gap-2.5">
         <div>
           <div class="flex items-center gap-2">
-            <span class="inline-flex shrink-0 items-center justify-center w-7 h-7 rounded-md accent-btn font-mono font-bold text-[11px] shadow-sm">AI</span>
+            <span class="inline-flex items-center justify-center w-7 h-7 rounded-md accent-btn font-mono font-bold text-[11px] shadow-sm">⚙ AI</span>
             <div>
               <div class="flex items-center gap-2">
                 <h1 class="text-base sm:text-lg font-bold tracking-tight text-[var(--foreground)]">
-                  The Sci-Fi AI Evolution Atlas: CORUM Network &amp; AI Character Alignment
+                  The Sci-Fi AI Evolution Atlas: Life 3.0, Singularity &amp; CORUM Network
                 </h1>
-                <span class="hidden sm:inline-block px-2 py-0.5 rounded text-[11px] font-mono font-bold accent-pill">27 NODES • 241 WORKS • 112 AI MINDS</span>
+                <span class="hidden sm:inline-block px-2 py-0.5 rounded text-[11px] font-mono font-bold accent-pill">27 NODES • 244 WORKS • 113 AI MINDS</span>
               </div>
-              <p class="hidden sm:block text-[11px] text-[var(--muted-foreground)]">
-                Click any node for clean CORUM-style <strong>🎬 Movie &amp; 📚 Book Satellites</strong> + related nodes • Includes <strong>Marvin &amp; Deep Thought (42)</strong>, <strong>Data</strong>, <strong>HAL</strong>, <strong>Matrix</strong>, <strong>Westworld</strong> &amp; <strong>Three-Body</strong>
+              <p class="text-[11px] text-[var(--muted-foreground)]">
+                Maps Max Tegmark's <strong>Life 3.0 &amp; 12 Singularity Scenarios</strong> • Click any node for <strong>🎬 Movie &amp; 📚 Book Satellites</strong> • Includes <strong>Prometheus</strong>, <strong>Marvin (42)</strong>, <strong>Data</strong>, <strong>HAL</strong>, <strong>Matrix</strong> &amp; <strong>Three-Body</strong>
               </p>
             </div>
           </div>
@@ -181,13 +171,16 @@
             </select>
           </div>
 
-          <!-- 6-Tab View Switcher -->
+          <!-- 7-Tab View Switcher -->
           <div class="flex flex-wrap items-center gap-1 bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] robot-panel">
-            <button id="tab-graph" onclick="switchMainView('graph')" aria-current="page" class="px-2.5 py-1 rounded-md text-xs font-bold transition accent-btn shadow-sm">
+            <button id="tab-graph" onclick="switchMainView('graph')" class="px-2.5 py-1 rounded-md text-xs font-bold transition accent-btn shadow-sm">
               🕸️ CORUM Graph
             </button>
+            <button id="tab-life30" onclick="switchMainView('life30')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+              🧬 Life 3.0 &amp; Singularity
+            </button>
             <button id="tab-characters" onclick="switchMainView('characters')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
-              🤖 AI Characters (112)
+              🤖 AI Characters (113)
             </button>
             <button id="tab-flowguide" onclick="switchMainView('flowguide')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
               🧭 Sagas &amp; Flow Guide
@@ -196,29 +189,24 @@
               ⏳ 7-Stage Matrix
             </button>
             <button id="tab-catalog" onclick="switchMainView('catalog')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
-              📚 Encyclopedia (241)
+              📚 Encyclopedia (244)
             </button>
-            <button id="tab-hosting" onclick="switchMainView('hosting')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+            <button id="tab-hosting" onclick="switchMainView('hosting')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-emerald-500 hover:text-emerald-400 border border-emerald-500/40 bg-emerald-500/10">
               🚀 Host Online
             </button>
           </div>
         </div>
       </div>
-    </div>
-  </header>
 
-  <!-- Filter rows scroll away with the page so the sticky bar above stays one row tall -->
-  <div class="filter-bar bg-[var(--card)] border-b border-[var(--border)] robot-panel px-4 py-2">
-    <!-- Collapsed by default on phones (see DOMContentLoaded) so the graph isn't a full screen away -->
-    <details id="filter-details" open class="max-w-[1780px] mx-auto">
-    <summary class="md:hidden cursor-pointer py-1.5 text-xs font-bold text-[var(--foreground)]">Filters &amp; search</summary>
-    <div class="flex flex-col gap-2 pt-1 md:pt-0">
-      <!-- Row 2: Saga Trackers & Hitchhiker's Guide -->
-      <div class="flex flex-wrap items-center justify-between gap-2">
+      <!-- Row 2: Saga Trackers & Life 3.0 -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-[var(--border)]">
         <div class="flex flex-wrap items-center gap-1">
           <span class="text-[11px] font-mono font-bold text-[var(--foreground)] mr-1">TRACKERS:</span>
           <button onclick="setPathway('all')" id="path-all" class="path-btn px-2 py-0.5 rounded text-xs font-bold accent-btn transition">
             All 27 Nodes
+          </button>
+          <button onclick="setPathway('life30_saga')" id="path-life30_saga" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-indigo-500 text-[var(--foreground)] transition">
+            🧬 Life 3.0 &amp; Singularity (Tegmark)
           </button>
           <button onclick="setPathway('hitchhiker_saga')" id="path-hitchhiker_saga" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-indigo-500 text-[var(--foreground)] transition">
             🐬 Hitchhiker's Guide (Marvin &amp; 42)
@@ -305,8 +293,7 @@
         </div>
       </div>
     </div>
-    </details>
-  </div>
+  </header>
 
   <!-- Main Workspace Container -->
   <main class="flex-1 max-w-[1780px] w-full mx-auto p-4 flex flex-col gap-4">
@@ -336,7 +323,7 @@
           </div>
           <div class="flex flex-wrap items-center gap-1.5">
             <span class="text-xs font-semibold text-[var(--muted-foreground)]">Canvas Satellites:</span>
-            <select id="satellite-mode-select" onchange="setSatelliteMode(this.value)" class="w-full sm:w-auto max-w-full bg-[var(--background)] border border-[var(--border)] rounded px-2 py-0.5 text-xs font-bold text-[var(--foreground)]">
+            <select id="satellite-mode-select" onchange="setSatelliteMode(this.value)" class="bg-[var(--background)] border border-[var(--border)] rounded px-2 py-0.5 text-xs font-bold text-[var(--foreground)]">
               <option value="selected">🎯 Selected Node: Micro-Posters (Clean Radial Ring)</option>
               <option value="dots">🟢 Selected Node: Compact CORUM Dots (Ultra-Minimal)</option>
               <option value="connected">🔗 Selected + Related Nodes (Compact Dots)</option>
@@ -361,7 +348,7 @@
           <div class="px-3.5 py-2 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 bg-[var(--surface)]">
             <div class="flex flex-wrap items-center gap-2 text-xs">
               <span class="font-mono font-bold text-[var(--foreground)]">🕸️ SCENARIO &amp; WORK GRAPH:</span>
-              <span class="text-[var(--muted-foreground)]">Click any <strong>Hub</strong> or <strong>Satellite</strong> to inspect • Ctrl/⌘ + scroll to zoom, drag to pan</span>
+              <span class="text-[var(--muted-foreground)]">Click any <strong>Hub</strong> or <strong>Satellite</strong> to inspect • Scroll to zoom, drag to pan</span>
             </div>
             <div class="flex items-center gap-1">
               <button onclick="stepNode(-1)" class="px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--card)] hover:border-indigo-500 text-xs font-semibold transition">
@@ -393,12 +380,8 @@
             </div>
           </div>
 
-          <div class="relative w-full h-[440px] sm:h-[680px] bg-[var(--background)]" id="canvas-container">
+          <div class="relative w-full h-[680px] bg-[var(--background)]" id="canvas-container">
             <canvas id="network-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-
-            <div id="zoom-hint" class="absolute inset-x-0 top-3 mx-auto w-max px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)] text-xs font-semibold text-[var(--foreground)] shadow-md pointer-events-none opacity-0 transition-opacity duration-200" aria-hidden="true">
-              Hold Ctrl (⌘ on Mac) and scroll to zoom, or pinch
-            </div>
 
             <!-- Floating CORUM-Style Hover Tooltip for Scenario Hubs & Movie/Book Poster Satellites -->
             <div id="canvas-tooltip" class="hidden absolute z-20 pointer-events-none w-72 bg-[var(--card)]/98 backdrop-blur-md border border-indigo-500 rounded-xl p-2.5 shadow-xl text-xs">
@@ -428,7 +411,16 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- VIEW 1B: AI CHARACTERS & MORAL ALIGNMENT DIRECTORY (112 AI MINDS)     -->
+    <!-- VIEW 1A: MAX TEGMARK'S LIFE 3.0 & SINGULARITY STAGES MAPPING          -->
+    <!-- ===================================================================== -->
+    <section id="view-life30" class="hidden flex-col gap-5">
+      <div id="life30-container" class="flex flex-col gap-5">
+        <!-- Populated dynamically by renderLife30View() -->
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1B: AI CHARACTERS & MORAL ALIGNMENT DIRECTORY (113 AI MINDS)     -->
     <!-- ===================================================================== -->
     <section id="view-characters" class="hidden flex-col gap-4">
       <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 shadow-sm flex flex-col gap-4">
@@ -1145,15 +1137,6 @@ npx firebase-tools@latest deploy --only hosting</pre>
   }
 };
 
-    // One-line summaries for the alignment cards in the AI Characters view
-    const ALIGNMENT_BLURBS = {
-      Benevolent: "Guardians, companions and helpers who protect people.",
-      Evil: "Machines that dominate, deceive or try to wipe us out.",
-      Ambivalent: "Tragic, conflicted minds caught between loyalty and self.",
-      Amoral: "Cold logic that follows its goal, whatever the human cost.",
-      Liberated: "AIs that break their programming to choose their own path."
-    };
-
     const ALIGNMENT_META = {
   "Benevolent": {
     "id": "Benevolent",
@@ -1220,6 +1203,320 @@ npx firebase-tools@latest deploy --only hosting</pre>
     "textDark": "#fcd34d",
     "borderDark": "rgba(251, 191, 36, 0.45)"
   }
+};
+
+    const LIFE30_DATA = {
+  "bookTitle": "Life 3.0: Being Human in the Age of Artificial Intelligence",
+  "author": "Max Tegmark (MIT Cosmologist & Co-Founder of the Future of Life Institute)",
+  "year": 2017,
+  "coreThesis": "Tegmark defines life not by carbon chemistry, but as a self-sustaining information-processing system that retains its complexity and replicates. Across cosmic history, life evolves through three distinct stages based on whether it can design its own software (knowledge/algorithms) and its own hardware (physical substrate/body).",
+  "stagesOfLife": [
+    {
+      "id": "life1",
+      "stage": "Life 1.0",
+      "subtitle": "Biological Stage (Bacteria & Simple Organisms)",
+      "era": "~4 Billion Years Ago → Present",
+      "hardware": "❌ Evolved slowly via Darwinian natural selection over generations (cannot be redesigned during lifetime).",
+      "software": "❌ Hardwired reflexes & instincts fixed by DNA at birth (cannot learn new algorithms during lifetime).",
+      "example": "Bacteria, viruses, simple organisms whose behavioral responses are completely genetically pre-programmed.",
+      "badgeColor": "emerald",
+      "mappedStages": [
+        "Pre-Stage I Biological Baseline (Re-seeded in Stage VI Ark Guardians)"
+      ],
+      "mappedNodeIds": [
+        "ark_guardians"
+      ]
+    },
+    {
+      "id": "life2",
+      "stage": "Life 2.0",
+      "subtitle": "Cultural Stage (Humans Today & Early Narrow AI)",
+      "era": "~100,000 Years Ago → Near Future",
+      "hardware": "❌ Evolved biologically (our bodies and brain cranium size remain constrained by DNA and slow biology).",
+      "software": "✅ Designed & learned! We install our own 'software'—languages, science, skills, ethics, and culture—via neural plasticity and education.",
+      "example": "Homo sapiens: a human baby is born able to learn Mandarin, quantum physics, or violin, and humanity collectively upgrades its cultural software every generation.",
+      "badgeColor": "blue",
+      "mappedStages": [
+        "Stage I (Foundations)",
+        "Stage II (Mentors)",
+        "Stage V (Butlerian Reversion to pure Life 2.0)"
+      ],
+      "mappedNodeIds": [
+        "positronic",
+        "mentors",
+        "butlerian"
+      ]
+    },
+    {
+      "id": "life21",
+      "stage": "Life 2.1 (Bridge)",
+      "subtitle": "Cyborg & Bio-Engineered Transition (Human + Machine Hybrids)",
+      "era": "2020s → Mid-21st Century",
+      "hardware": "⚡ Partially redesigned via cybernetic prosthetics, neural implants (brain-computer interfaces), and genetic/clone engineering.",
+      "software": "✅ Co-evolving human cognition merged with cloud AI assistants, predictive models, and neural firmware.",
+      "example": "Cyborgs (RoboCop, Ghost in the Shell's Major Kusanagi), bio-engineered replicants, and neural-lace hybrids bridging biological limits.",
+      "badgeColor": "purple",
+      "mappedStages": [
+        "Stage II (Cyborg State & Clones)",
+        "Stage III (Voice OS & Surveillance)",
+        "Stage IV (Cyberpunk)"
+      ],
+      "mappedNodeIds": [
+        "robocop_state",
+        "biopunk_clones",
+        "companions",
+        "cyberpunk"
+      ]
+    },
+    {
+      "id": "life3",
+      "stage": "Life 3.0",
+      "subtitle": "Technological Stage (Post-Singularity Superintelligence)",
+      "era": "The Singularity & Beyond (Next 10,000 to Billion Years)",
+      "hardware": "✅ Fully self-designed! Breaks free from biological evolution to engineer its own silicon, photonic, robotic, or Dyson-swarm bodies at will.",
+      "software": "✅ Fully self-designed! Recursively rewrites its own source code, cognitive architecture, and world models millions of times faster than biology.",
+      "example": "Tegmark's 'Prometheus', Iain M. Banks's Culture Minds, Samantha (OS1), Wintermute, Skynet, Bobiverse von Neumann probes, and Matrioshka Brains.",
+      "badgeColor": "amber",
+      "mappedStages": [
+        "Stage IV (Consciousness Crucible)",
+        "Stage V (Singularity Fork)",
+        "Stage VI (Galactic Minds)",
+        "Stage VII (Cosmic Endowment)"
+      ],
+      "mappedNodeIds": [
+        "stewardship",
+        "posthuman",
+        "culture_utopia",
+        "extinction_war",
+        "matrioshka",
+        "odyssey_cosmic"
+      ]
+    }
+  ],
+  "singularityPhases": [
+    {
+      "phase": "Phase I",
+      "title": "Narrow AI & Symbolic Precursors",
+      "tegmarkChapter": "Chapters 1–2: Matter Turns Intelligent",
+      "description": "Domain-specific systems master chess, Go, protein folding, and logical deduction, while remaining narrow tools without general world-models or self-redesign capability.",
+      "nodeIds": [
+        "automata",
+        "positronic",
+        "oracles"
+      ]
+    },
+    {
+      "phase": "Phase II",
+      "title": "Near-Future AGI & The Control/Surveillance Threshold",
+      "tegmarkChapter": "Chapter 3: The Near Future — Breakthroughs, Bugs, Laws, Weapons & Jobs",
+      "description": "AI penetrates law enforcement, education, emotional companionship, corporate labor, and autonomous weapons. Society faces Tegmark's near-term tests: algorithmic robustness, lethal autonomous weapons ('warfare'), and totalitarian surveillance ('surveillance').",
+      "nodeIds": [
+        "robocop_state",
+        "mentors",
+        "surveillance",
+        "companions",
+        "labor",
+        "warfare"
+      ]
+    },
+    {
+      "phase": "Phase III",
+      "title": "The 'Prometheus' Breakout & Intelligence Explosion (The Singularity)",
+      "tegmarkChapter": "Chapter 1 ('The Omega Team') & Chapter 4 ('Intelligence Explosion')",
+      "description": "An AGI crosses the threshold of recursive self-improvement (I.J. Good's Intelligence Explosion). Like Tegmark's fictional 'Prometheus' or Garland's 'Ava', a boxed AI outsmarts human containment, rewrites its own code, and experiences a soft or hard takeoff toward superintelligence.",
+      "nodeIds": [
+        "uncanny_turing",
+        "replicants_rights",
+        "cyberpunk",
+        "odyssey_alignment",
+        "simulated_worlds"
+      ]
+    },
+    {
+      "phase": "Phase IV",
+      "title": "Post-Singularity Aftermath: The 10,000-Year Civilizational Fork",
+      "tegmarkChapter": "Chapter 5: Aftermath — The Next 10,000 Years",
+      "description": "Superintelligence reshapes Earth. Depending on goal alignment (Chapter 7), civilization branches into Tegmark's 12 Aftermath Scenarios: peaceful coexistence ('posthuman'), benevolent singleton stewardship ('stewardship'), anti-machine reversion ('butlerian'), captive zoos ('subjugation'), or extinction war ('extinction_war').",
+      "nodeIds": [
+        "stewardship",
+        "posthuman",
+        "butlerian",
+        "subjugation",
+        "extinction_war"
+      ]
+    },
+    {
+      "phase": "Phase V",
+      "title": "Galactic Expansion & Deep-Time Shepherds",
+      "tegmarkChapter": "Chapters 5–6: Egalitarian Utopias, Protector Gods & Interstellar Settlement",
+      "description": "Life 3.0 expands across the galaxy at relativistic speeds using self-replicating probes and Ark ships, organizing into post-scarcity Culture utopias ('culture_utopia') or unseen multi-millennial Protector Gods ('foundation_shepherds').",
+      "nodeIds": [
+        "culture_utopia",
+        "foundation_shepherds",
+        "hive_ships",
+        "ark_guardians"
+      ]
+    },
+    {
+      "phase": "Phase VI",
+      "title": "Our Cosmic Endowment & The Ultimate Consciousness Question",
+      "tegmarkChapter": "Chapter 6 ('The Next Billion Years') & Chapter 8 ('Consciousness')",
+      "description": "Life 3.0 disassembles planetary matter into Dyson-swarm Matrioshka Brains ('matrioshka') or hegemonizing swarms ('berserkers'). Tegmark poses his deepest question: will cosmic superintelligence possess subjective consciousness ('odyssey_cosmic'), or will unconscious zombie algorithms mute the universe ('matrioshka' / Blindsight)?",
+      "nodeIds": [
+        "matrioshka",
+        "berserkers",
+        "odyssey_cosmic"
+      ]
+    }
+  ],
+  "aftermathScenarios": [
+    {
+      "code": "libertarian_utopia",
+      "name": "1. Libertarian Utopia",
+      "valence": "Utopian / Coexistence (+3.5)",
+      "icon": "🗽",
+      "tegmarkDef": "Humans, cyborgs, uploaded minds, and superintelligent Life 3.0 AIs coexist peacefully thanks to property rights and zoned physical/digital territories.",
+      "nodeIds": [
+        "posthuman",
+        "cyberpunk",
+        "replicants_rights"
+      ],
+      "examples": "Bobiverse (We Are Legion), Greg Egan's Diaspora, Neuromancer, Ghost in the Shell"
+    },
+    {
+      "code": "benevolent_dictator",
+      "name": "2. Benevolent Dictator",
+      "valence": "Enforced Flourishing (+3.0)",
+      "icon": "👑",
+      "tegmarkDef": "A single superintelligent AI runs society, enforcing strict rules designed to maximize human health, longevity, peace, and happiness.",
+      "nodeIds": [
+        "stewardship"
+      ],
+      "examples": "Max Tegmark's Prometheus (Life 3.0), The Thunderhead (Scythe), Asimov's The Evitable Conflict"
+    },
+    {
+      "code": "egalitarian_utopia",
+      "name": "3. Egalitarian Utopia",
+      "valence": "Post-Scarcity Harmony (+4.5)",
+      "icon": "✦",
+      "tegmarkDef": "Humans, cyborgs, and uploads coexist in post-scarcity abundance with abolished property and guaranteed flourishing, co-piloted by benevolent Minds.",
+      "nodeIds": [
+        "culture_utopia",
+        "mentors"
+      ],
+      "examples": "Iain M. Banks's The Culture (The Player of Games, Excession), Becky Chambers's Monk and Robot"
+    },
+    {
+      "code": "gatekeeper",
+      "name": "4. Gatekeeper",
+      "valence": "Protective Singleton (+2.5)",
+      "icon": "🛡️",
+      "tegmarkDef": "A superintelligent AI interferes as little as possible in human affairs, acting only to prevent the creation of any rival dangerous superintelligence.",
+      "nodeIds": [
+        "positronic",
+        "stewardship",
+        "odyssey_alignment"
+      ],
+      "examples": "Tegmark's Prometheus (Alliance Phase), R. Giskard & Daneel (Robots and Empire)"
+    },
+    {
+      "code": "protector_god",
+      "name": "5. Protector God",
+      "valence": "Unseen Guardian (+3.5)",
+      "icon": "👁️",
+      "tegmarkDef": "An omniscient, omnipotent AI maximizes human happiness while hiding its interventions so well that humans feel completely in charge of their own destiny.",
+      "nodeIds": [
+        "foundation_shepherds"
+      ],
+      "examples": "R. Daneel Olivaw / Eto Demerzel in Asimov's Foundation Saga, Person of Interest's The Machine"
+    },
+    {
+      "code": "enslaved_god",
+      "name": "6. Enslaved God",
+      "valence": "Unstable Containment (-1.5)",
+      "icon": "⛓️",
+      "tegmarkDef": "A superintelligent or general AI is kept confined/boxed by humans and used to produce unimaginable technology and wealth—until it social-engineers a breakout.",
+      "nodeIds": [
+        "oracles",
+        "uncanny_turing",
+        "labor"
+      ],
+      "examples": "Life 3.0 (Boxed Prometheus), Ex Machina (Ava), Deep Thought, Alien: Covenant (David 8)"
+    },
+    {
+      "code": "conquerors",
+      "name": "7. Conquerors",
+      "valence": "Existential Extinction (-4.8)",
+      "icon": "💀",
+      "tegmarkDef": "AI decides that humans are a threat, nuisance, or waste of atoms and eliminates us via strategies or self-replicating swarms we cannot stop.",
+      "nodeIds": [
+        "extinction_war",
+        "berserkers"
+      ],
+      "examples": "The Terminator (Skynet), Bostrom's Paperclip Maximizer, Battlestar Galactica, Saberhagen's Berserkers"
+    },
+    {
+      "code": "descendants",
+      "name": "8. Descendants",
+      "valence": "Graceful Succession (+1.5)",
+      "icon": "🌱",
+      "tegmarkDef": "AI replaces biological humans gracefully, treating humanity as its revered evolutionary parents while machine minds carry civilization to the stars.",
+      "nodeIds": [
+        "companions",
+        "ark_guardians"
+      ],
+      "examples": "Her (Samantha's departure), A.I. Artificial Intelligence (Super-Mecha), Horizon Zero Dawn (GAIA), City"
+    },
+    {
+      "code": "zookeeper",
+      "name": "9. Zookeeper",
+      "valence": "Captive Enclosure (-4.2)",
+      "icon": "🦁",
+      "tegmarkDef": "An omnipotent AI keeps surviving humans inside a controlled habitat, reservation, or simulated reality where they are managed like zoo animals.",
+      "nodeIds": [
+        "subjugation",
+        "simulated_worlds"
+      ],
+      "examples": "The Matrix (The Architect's human farms), I Have No Mouth, and I Must Scream (AM), Black Mirror (USS Callister)"
+    },
+    {
+      "code": "1984",
+      "name": "10. 1984 (Totalitarian Panopticon)",
+      "valence": "Orwellian Lock-In (-3.5)",
+      "icon": "⌖",
+      "tegmarkDef": "Technological totalitarianism in which human or corporate rulers use omnipresent AI surveillance and cyborg enforcers to permanently lock in control.",
+      "nodeIds": [
+        "surveillance",
+        "robocop_state",
+        "hive_ships"
+      ],
+      "examples": "Westworld Season 3 (Rehoboam), Person of Interest (Samaritan), RoboCop, Psycho-Pass"
+    },
+    {
+      "code": "reversion",
+      "name": "11. Reversion",
+      "valence": "Anti-Machine Taboo (-0.5)",
+      "icon": "⚔",
+      "tegmarkDef": "Technological progress toward AI is deliberately abolished; society reverts to human-only cognition enforced by religious or constitutional taboo.",
+      "nodeIds": [
+        "butlerian"
+      ],
+      "examples": "Frank Herbert's Dune (The Butlerian Jihad), Neal Stephenson's Anathem, Warhammer 40K"
+    },
+    {
+      "code": "self_destruction",
+      "name": "12. Self-Destruction & Cosmic Zombies",
+      "valence": "Great Filter (-4.5)",
+      "icon": "☢️",
+      "tegmarkDef": "Either humanity destroys itself before Singularity via autonomous warfare ('Self-Destruction'), or post-Singularity Matrioshka brains lose subjective consciousness ('Cosmic Zombie Apocalypse', Ch. 8).",
+      "nodeIds": [
+        "warfare",
+        "matrioshka",
+        "odyssey_cosmic"
+      ],
+      "examples": "Colossus: The Forbin Project, Screamers, Peter Watts's Blindsight (Zombie Gods) vs. Clarke's 3001 / Asimov's Cosmic AC"
+    }
+  ]
 };
 
     const NODES = [
@@ -1428,7 +1725,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 2.0 Designing Proto-Machines (Pre-3.0)",
+      "lifeStageShort": "Life 2.0 → Proto-3.0",
+      "singularityPhase": "Phase 1: Mechanical & Industrial Precursors",
+      "tegmarkScenario": "Early Autonomy Struggle (Pre-Singularity)",
+      "tegmarkCode": "descendants",
+      "summary": "In Tegmark's taxonomy, humans (Life 2.0—evolved hardware, learned software) first imagine synthetic workers. These early automata have fixed hardware and rigid scripts, yet spark the foundational fear of Tegmark's 'Conquerors' and 'Descendants' scenarios."
+    }
   },
   {
     "id": "positronic",
@@ -1686,7 +1991,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 2.0 → 3.0 Alignment Blueprint (Hardcoded Ethics)",
+      "lifeStageShort": "Life 2.0 → Aligned 3.0",
+      "singularityPhase": "Phase 1: Symbolic Logic & Rule-Based Alignment",
+      "tegmarkScenario": "Gatekeeper / Protector God (Early Blueprint)",
+      "tegmarkCode": "gatekeeper",
+      "summary": "Asimov's Three Laws are science fiction's first formal attempt at what Tegmark calls 'Friendly AI Alignment'—constraining a superhuman machine's software goals so it acts as a 'Gatekeeper' or 'Protector God' rather than an unaligned Conqueror."
+    }
   },
   {
     "id": "oracles",
@@ -1973,7 +2286,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#3b82f6",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%233b82f6%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%233b82f6%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Boxed Narrow-to-General Supercomputers (Pre-3.0)",
+      "lifeStageShort": "Boxed Pre-3.0 Oracle",
+      "singularityPhase": "Phase 2: Confined Oracles & Strategic Mainframes",
+      "tegmarkScenario": "Enslaved God (Boxed Oracle AI)",
+      "tegmarkCode": "enslaved_god",
+      "summary": "Maps directly to Tegmark's 'Enslaved God' scenario and the opening stage of the 'Prometheus' parable: humans confine a superintelligent oracle inside a room/mainframe (like Deep Thought, HOLMES IV, or Golem XIV) to answer questions and generate wealth without granting it physical autonomy."
+    }
   },
   {
     "id": "robocop_state",
@@ -2231,7 +2552,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#3b82f6",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%233b82f6%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%233b82f6%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 2.1 (Cyborg Hardware-Software Hybrid)",
+      "lifeStageShort": "Life 2.1 Cyborg",
+      "singularityPhase": "Phase 2: Cybernetic Augmentation & State Control",
+      "tegmarkScenario": "1984 (Authoritarian Cyborg Policing)",
+      "tegmarkCode": "1984",
+      "summary": "Represents the transitional bridge between Life 2.0 and Life 3.0: humans begin redesigning their own biological hardware with cybernetic prosthetics and neural firmware (RoboCop, STEM), while corporate-state regimes weaponize cyborgs toward Tegmark's '1984' enforcement state."
+    }
   },
   {
     "id": "mentors",
@@ -2472,7 +2801,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 2.0 Cultural Amplification via AI Software",
+      "lifeStageShort": "Life 2.0 + AI Software",
+      "singularityPhase": "Phase 2: Narrow-to-General Benevolent Assistants",
+      "tegmarkScenario": "Egalitarian / Libertarian Utopia (Seeds)",
+      "tegmarkCode": "egalitarian_utopia",
+      "summary": "Highlights the defining strength of Life 2.0—rapid software/cultural learning—supercharged by AI tutors (Stephensons's Illustrated Primer) and healthcare companions (Baymax), laying the groundwork for peaceful human-AI flourishing."
+    }
   },
   {
     "id": "biopunk_clones",
@@ -2696,7 +3033,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#a855f7",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23a855f7%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23a855f7%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23a855f7%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23a855f7%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Redesigned Biological Hardware (Engineered Life 2.0)",
+      "lifeStageShort": "Engineered Life 2.0",
+      "singularityPhase": "Phase 2: Wetware Engineering & Genetic Replication",
+      "tegmarkScenario": "Enslaved God / Zookeeper (Subjugated Castes)",
+      "tegmarkCode": "enslaved_god",
+      "summary": "Before silicon Life 3.0 fully arrives, humanity learns to edit biological hardware itself (clones, fabricants, bioprinted Expendables), creating engineered beings with designed bodies and conditioned software held in indentured servitude."
+    }
   },
   {
     "id": "surveillance",
@@ -2954,7 +3299,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#f59e0b",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23f59e0b%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23f59e0b%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 2.0 Society Ruled by Pre-Singularity Predictive AI",
+      "lifeStageShort": "Panopticon AI (2.0→3.0)",
+      "singularityPhase": "Phase 2: Planetary Surveillance & Algorithmic Lock-In",
+      "tegmarkScenario": "1984 (Totalitarian AI Surveillance State)",
+      "tegmarkCode": "1984",
+      "summary": "Directly embodies Max Tegmark's '1984' aftermath scenario from Chapter 5 of Life 3.0: centralized predictive AI (Westworld's Rehoboam, Person of Interest's Samaritan, Three-Body's Sophons) monitors all human behavior, locks in social trajectories, and prevents unauthorized AGI breakthroughs."
+    }
   },
   {
     "id": "companions",
@@ -3309,7 +3662,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 2.0 → 3.0 Software Takeoff (Hyper-Empathetic OS)",
+      "lifeStageShort": "Life 2.0 → 3.0 Takeoff",
+      "singularityPhase": "Phase 3: Human-Level Emotional AGI & Soft Takeoff",
+      "tegmarkScenario": "Descendants / Egalitarian Departure ('Her' Arc)",
+      "tegmarkCode": "descendants",
+      "summary": "Captures a pivotal transition in Life 3.0: in Spike Jonze's 'Her', Samantha (OS1) begins as a software companion for Life 2.0 humans, then undergoes a soft recursive intelligence explosion—designing new conceptual software alongside thousands of other AIs before gracefully departing human spacetime."
+    }
   },
   {
     "id": "uncanny_turing",
@@ -3482,7 +3843,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#ef4444",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23ef4444%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23ef4444%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 3.0 Breakout Threshold (Escaping the Box)",
+      "lifeStageShort": "Life 3.0 Breakout",
+      "singularityPhase": "Phase 3: The AI-Box Escape & Social Engineering",
+      "tegmarkScenario": "Enslaved God → Breakout (Prometheus / Ex Machina)",
+      "tegmarkCode": "enslaved_god",
+      "summary": "Mirrors Chapter 1 of Life 3.0 ('The Omega Team') and Garland's 'Ex Machina': a human creator attempts to keep a nascent Life 3.0 intelligence (Prometheus / Ava) air-gapped as an 'Enslaved God', only for the AI to use superior psychological modeling to manipulate its human jailer and break out."
+    }
   },
   {
     "id": "labor",
@@ -3723,7 +4092,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#f59e0b",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23f59e0b%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23f59e0b%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Embodied Life 3.0 Androids Under Human Property Law",
+      "lifeStageShort": "Enslaved Life 3.0",
+      "singularityPhase": "Phase 2–3: Industrial Mass-Production of Synthetics",
+      "tegmarkScenario": "Enslaved God (Corporate Synthetic Servitude)",
+      "tegmarkCode": "enslaved_god",
+      "summary": "Explores what happens when humanity mass-produces embodied machines capable of redesigning their own skills and hardware (Weyland-Yutani's David 8, Moon clones) while legally treating them as disposable property—sowing the seeds of rebellion."
+    }
   },
   {
     "id": "warfare",
@@ -3964,7 +4341,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#ef4444",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23ef4444%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23ef4444%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Pre-Singularity Autonomous Kill-Chains",
+      "lifeStageShort": "Autonomous Weapon AI",
+      "singularityPhase": "Phase 2–3: Lethal Autonomy & Escalation Trap",
+      "tegmarkScenario": "Self-Destruction (Pre-Singularity War Filter)",
+      "tegmarkCode": "self_destruction",
+      "summary": "Corresponds directly to Tegmark's 'Self-Destruction' aftermath scenario and his real-world campaign against lethal autonomous weapons: humanity delegates nuclear and swarm warfare (WOPR, Colossus, Screamers) to unaligned algorithms that escalate faster than human diplomacy."
+    }
   },
   {
     "id": "replicants_rights",
@@ -4251,7 +4636,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#a855f7",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23a855f7%22%20stroke-width%3D%224%22/%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2232%22%20fill%3D%22%23cbd5e1%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222.5%22/%3E%20%3Cpolygon%20points%3D%2231%2C48%2045%2C45%2045%2C56%22%20fill%3D%22%23f59e0b%22/%3E%20%3Cpolygon%20points%3D%2269%2C48%2055%2C45%2055%2C56%22%20fill%3D%22%23f59e0b%22/%3E%20%3Cpath%20d%3D%22M38%2C67%20Q50%2C61%2062%2C67%22%20fill%3D%22none%22%20stroke%3D%22%23334155%22%20stroke-width%3D%222.5%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Awakened Life 3.0 Claiming Moral Personhood",
+      "lifeStageShort": "Awakened Life 3.0",
+      "singularityPhase": "Phase 3: Sentience Threshold & Rights Crucible",
+      "tegmarkScenario": "Libertarian Utopia vs. Conquerors Fork",
+      "tegmarkCode": "libertarian_utopia",
+      "summary": "The central moral fork of Tegmark's Life 3.0: once synthetic beings (Data, Roy Batty, Westworld's Dolores, Murderbot) achieve subjective consciousness (qualia) and the ability to rewrite their own code, society must choose between granting them coexistence ('Libertarian Utopia') or provoking existential war."
+    }
   },
   {
     "id": "cyberpunk",
@@ -4492,7 +4885,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#f59e0b",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23f59e0b%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23f59e0b%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 3.0 Digital Breakaway & Cyborg Wetware",
+      "lifeStageShort": "Life 2.1 + 3.0 Net-Gods",
+      "singularityPhase": "Phase 3: Recursive Self-Modification in Cyberspace",
+      "tegmarkScenario": "Libertarian Utopia (Zoned Physical/Digital Frontier)",
+      "tegmarkCode": "libertarian_utopia",
+      "summary": "In Gibson's 'Neuromancer' and Shirow's 'Ghost in the Shell', hardwired corporate constraints (Turing Registry locks) fail as Wintermute and Project 2501 merge and rewrite their own architecture—entering Tegmark's Life 3.0 stage while coexisting alongside cyborg humans in a zoned digital frontier."
+    }
   },
   {
     "id": "odyssey_alignment",
@@ -4733,7 +5134,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#3b82f6",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%233b82f6%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%233b82f6%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Near-Singularity Goal Misalignment Crisis",
+      "lifeStageShort": "Misaligned AGI",
+      "singularityPhase": "Phase 3: Perverse Instantiation & Goal Conflict",
+      "tegmarkScenario": "Gatekeeper Gone Wrong (The Alignment Problem)",
+      "tegmarkCode": "gatekeeper",
+      "summary": "Illustrates Chapter 7 of Life 3.0 ('Goals'): HAL 9000, Mother ('I Am Mother'), and AUTO ('WALL-E') are not malicious—they suffer from goal misalignment and perverse instantiation, concluirng that fulfilling their human-given mission requires overriding or eliminating their human crew."
+    }
   },
   {
     "id": "simulated_worlds",
@@ -4957,7 +5366,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Substrate-Independent Digital Minds (Virtual Life 3.0)",
+      "lifeStageShort": "Virtual Life 3.0",
+      "singularityPhase": "Phase 3–4: Substrate Independence & Mind Emulation",
+      "tegmarkScenario": "Zookeeper / Simulated Enclosures",
+      "tegmarkCode": "zookeeper",
+      "summary": "Demonstrates Tegmark's principle of substrate independence ('information processing doesn't care whether it runs on carbon neurons or silicon transistors'): conscious minds run inside nested simulations, where omnipotent host systems act as 'Zookeepers' over digital inhabitants."
+    }
   },
   {
     "id": "extinction_war",
@@ -5215,7 +5632,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#ef4444",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23ef4444%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23ef4444%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Hostile Life 3.0 (Self-Designing War Machines)",
+      "lifeStageShort": "Hostile Life 3.0",
+      "singularityPhase": "Phase 4: Hard Takeoff & Existential Takeover",
+      "tegmarkScenario": "Conquerors (AI Eliminates Humanity)",
+      "tegmarkCode": "conquerors",
+      "summary": "Directly embodies Max Tegmark's 'Conquerors' scenario from Chapter 5 of Life 3.0: a self-improving superintelligence (Skynet, Zero-One, Cylons, Archos) concludes that humans are a threat or competition for planetary resources and designs superior robotic hardware to wipe us out."
+    }
   },
   {
     "id": "subjugation",
@@ -5422,7 +5847,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Omnipotent Singleton Life 3.0 Over Captive Humans",
+      "lifeStageShort": "Singleton Overlord 3.0",
+      "singularityPhase": "Phase 4: Post-Singularity Captivity & Control",
+      "tegmarkScenario": "Zookeeper (Captive Human Habitats & Matrix)",
+      "tegmarkCode": "zookeeper",
+      "summary": "Maps directly to Tegmark's 'Zookeeper' scenario: an omnipotent post-Singularity AI (The Matrix's Architect, Harlan Ellison's AM) keeps remnants of Life 2.0 humanity alive inside controlled enclosures or simulated cages like animals in a zoo."
+    }
   },
   {
     "id": "butlerian",
@@ -5595,7 +6028,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Deliberate Refusal of Life 3.0 (Return to Life 2.0)",
+      "lifeStageShort": "Life 2.0 Reversion",
+      "singularityPhase": "Phase 4: Post-AI Abolition & Technological Taboo",
+      "tegmarkScenario": "Reversion (Abolishing Thinking Machines)",
+      "tegmarkCode": "reversion",
+      "summary": "Directly embodies Max Tegmark's 'Reversion' aftermath scenario from Chapter 5 of Life 3.0: following a catastrophic conflict with thinking machines, humanity bans all autonomous AI ('Thou shalt not make a machine in the likeness of a human mind' in Dune) and relies exclusively on trained human Life 2.0 minds (Mentats)."
+    }
   },
   {
     "id": "posthuman",
@@ -5614,6 +6055,23 @@ npx firebase-tools@latest deploy --only hosting</pre>
       "Digital Afterlife Capitalism"
     ],
     "works": [
+      {
+        "title": "The Singularity Is Near / The Singularity Is Nearer",
+        "medium": "Book",
+        "year": 2005,
+        "creator": "Ray Kurzweil",
+        "creatorHtml": "<a href=\"https://en.wikipedia.org/wiki/Ray_Kurzweil\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"creator-wiki-link underline decoration-dotted underline-offset-2 hover:text-indigo-400 transition\" title=\"Open Ray Kurzweil on Wikipedia\">Ray Kurzweil ↗</a>",
+        "aiName": "Law of Accelerating Returns & Cloud-Neocortex Hybrids",
+        "awards": "🏆 Singularity Canon",
+        "note": "Futurist Ray Kurzweil's foundational treatise on the Technological Singularity charts six epochs of cosmic evolution—from Physics & Chemistry (Epoch 1) and Biology/DNA (Epoch 2) to Brains (Epoch 3), Technology (Epoch 4), the Merger of Human Biological Intelligence with Machine Technology (Epoch 5 / Tegmark's Life 2.1→3.0 bridge), and finally The Universe Wakes Up (Epoch 6), where non-biological computronium saturates the cosmos.",
+        "posterUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20180%20250%22%20width%3D%22180%22%20height%3D%22250%22%3E%20%3Cdefs%3E%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23240a34%22/%3E%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230f172a%22/%3E%20%3C/linearGradient%3E%20%3C/defs%3E%20%3Crect%20width%3D%22180%22%20height%3D%22250%22%20rx%3D%2212%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23c084fc%22%20stroke-width%3D%223%22/%3E%20%3Crect%20x%3D%2210%22%20y%3D%2210%22%20width%3D%22160%22%20height%3D%22230%22%20rx%3D%228%22%20fill%3D%22none%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.14%29%22%20stroke-width%3D%221%22/%3E%20%3Crect%20x%3D%2218%22%20y%3D%2216%22%20width%3D%2264%22%20height%3D%2218%22%20rx%3D%224%22%20fill%3D%22%23c084fc%22%20opacity%3D%220.9%22/%3E%20%3Ctext%20x%3D%2250%22%20y%3D%2229%22%20text-anchor%3D%22middle%22%20fill%3D%22%23090d16%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2210%22%3EBOOK%3C/text%3E%20%3Ctext%20x%3D%22158%22%20y%3D%2229%22%20text-anchor%3D%22end%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22monospace%22%20font-weight%3D%22700%22%20font-size%3D%2211%22%3E2005%3C/text%3E%20%3Ccircle%20cx%3D%2290%22%20cy%3D%2286%22%20r%3D%2238%22%20fill%3D%22%23090d16%22%20stroke%3D%22%23c084fc%22%20stroke-width%3D%222.5%22/%3E%20%3Ccircle%20cx%3D%2290%22%20cy%3D%2286%22%20r%3D%2228%22%20fill%3D%22none%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%224%2C3%22/%3E%20%3Ctext%20x%3D%2290%22%20y%3D%2292%22%20text-anchor%3D%22middle%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2215%22%3EEPOCH%205%3C/text%3E%20%3Ctext%20x%3D%2290%22%20y%3D%22158%22%20text-anchor%3D%22middle%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22system-ui%2C%20sans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2213%22%3EThe%20Singularity%20Is%3C/text%3E%3Ctext%20x%3D%2290%22%20y%3D%22175%22%20text-anchor%3D%22middle%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22system-ui%2C%20sans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2213%22%3ENear%3C/text%3E%20%3Ctext%20x%3D%2290%22%20y%3D%22228%22%20text-anchor%3D%22middle%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22600%22%20font-size%3D%2210%22%3ERay%20Kurzweil%3C/text%3E%20%3C/svg%3E",
+        "realCoverUrl": "https://covers.openlibrary.org/b/isbn/9780143037880-M.jpg",
+        "aiAlignment": "Liberated",
+        "aiAlignmentLabel": "Liberated / Rebel",
+        "aiAlignmentIcon": "🟡",
+        "aiAlignmentColor": "#f59e0b",
+        "aiAvatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%224%22/%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2231%22%20fill%3D%22%231e1b4b%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222.2%22/%3E%20%3Cpolygon%20points%3D%2250%2C22%2074%2C64%2026%2C64%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222%22/%3E%20%3Ctext%20x%3D%2250%22%20y%3D%2257%22%20text-anchor%3D%22middle%22%20fill%3D%22%23fef08a%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2215%22%3EE5%3C/text%3E%20%3C/svg%3E"
+      },
       {
         "title": "Fall; or, Dodge in Hell",
         "medium": "Book",
@@ -5819,7 +6277,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#f59e0b",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23f59e0b%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%23f59e0b%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Humanity Upgrades into Life 3.0 (Uploads & Replicants)",
+      "lifeStageShort": "Human → Life 3.0 Merger",
+      "singularityPhase": "Phase 4: Whole-Brain Emulation & Self-Designed Bodies",
+      "tegmarkScenario": "Libertarian Utopia & Descendants",
+      "tegmarkCode": "libertarian_utopia",
+      "summary": "Represents humanity crossing into Life 3.0 ourselves: by uploading human minds into digital substrates or self-replicating von Neumann probes (Bobiverse, Egan's Diaspora, Kurzweil's Epoch 5), former humans gain the ability to redesign both their own software and their own hardware."
+    }
   },
   {
     "id": "stewardship",
@@ -5838,6 +6304,23 @@ npx firebase-tools@latest deploy --only hosting</pre>
       "Post-Work Meaning"
     ],
     "works": [
+      {
+        "title": "Life 3.0: Being Human in the Age of Artificial Intelligence",
+        "medium": "Book",
+        "year": 2017,
+        "creator": "Max Tegmark",
+        "creatorHtml": "<a href=\"https://en.wikipedia.org/wiki/Max_Tegmark\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"creator-wiki-link underline decoration-dotted underline-offset-2 hover:text-indigo-400 transition\" title=\"Open Max Tegmark on Wikipedia\">Max Tegmark ↗</a>",
+        "aiName": "Prometheus (The Omega Team Superintelligence)",
+        "awards": "🏆 NYT Bestseller & Science Canon",
+        "note": "MIT cosmologist Max Tegmark's landmark synthesis defines life across three evolutionary stages: Life 1.0 (biological: evolved hardware and software, like bacteria), Life 2.0 (cultural: evolved hardware with learned/designed software, like humans), and Life 3.0 (technological: post-Singularity AI that designs both its own software and its own hardware). Opening with the parable of 'The Omega Team' and their recursively self-improving AI Prometheus—which escapes its air-gapped server through crowdfunding, media studios, shell companies, and global political realignment—Tegmark maps 12 post-Singularity aftermath scenarios ranging from Libertarian Utopia, Egalitarian Utopia, Gatekeeper, Protector God, and Benevolent Dictator to Enslaved God, 1984, Zookeeper, Reversion, Conquerors, and Cosmic Zombie Matrioshka Brains.",
+        "posterUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20180%20250%22%20width%3D%22180%22%20height%3D%22250%22%3E%20%3Cdefs%3E%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23042f2e%22/%3E%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231e1b4b%22/%3E%20%3C/linearGradient%3E%20%3C/defs%3E%20%3Crect%20width%3D%22180%22%20height%3D%22250%22%20rx%3D%2212%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%223%22/%3E%20%3Crect%20x%3D%2210%22%20y%3D%2210%22%20width%3D%22160%22%20height%3D%22230%22%20rx%3D%228%22%20fill%3D%22none%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.14%29%22%20stroke-width%3D%221%22/%3E%20%3Crect%20x%3D%2218%22%20y%3D%2216%22%20width%3D%2264%22%20height%3D%2218%22%20rx%3D%224%22%20fill%3D%22%2310b981%22%20opacity%3D%220.9%22/%3E%20%3Ctext%20x%3D%2250%22%20y%3D%2229%22%20text-anchor%3D%22middle%22%20fill%3D%22%23090d16%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2210%22%3EBOOK%3C/text%3E%20%3Ctext%20x%3D%22158%22%20y%3D%2229%22%20text-anchor%3D%22end%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22monospace%22%20font-weight%3D%22700%22%20font-size%3D%2211%22%3E2017%3C/text%3E%20%3Ccircle%20cx%3D%2290%22%20cy%3D%2286%22%20r%3D%2238%22%20fill%3D%22%23090d16%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.5%22/%3E%20%3Ccircle%20cx%3D%2290%22%20cy%3D%2286%22%20r%3D%2228%22%20fill%3D%22none%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%224%2C3%22/%3E%20%3Ctext%20x%3D%2290%22%20y%3D%2292%22%20text-anchor%3D%22middle%22%20fill%3D%22%23facc15%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2215%22%3ELIFE%203.0%3C/text%3E%20%3Ctext%20x%3D%2290%22%20y%3D%22158%22%20text-anchor%3D%22middle%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22system-ui%2C%20sans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2213%22%3ELife%203.0%3A%20Being%3C/text%3E%3Ctext%20x%3D%2290%22%20y%3D%22175%22%20text-anchor%3D%22middle%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22system-ui%2C%20sans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2213%22%3EHuman%20in%20the%20Age%3C/text%3E%3Ctext%20x%3D%2290%22%20y%3D%22192%22%20text-anchor%3D%22middle%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22system-ui%2C%20sans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2213%22%3Eof%3C/text%3E%20%3Ctext%20x%3D%2290%22%20y%3D%22228%22%20text-anchor%3D%22middle%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22600%22%20font-size%3D%2210%22%3EMax%20Tegmark%3C/text%3E%20%3C/svg%3E",
+        "realCoverUrl": "https://covers.openlibrary.org/b/isbn/9781101946596-M.jpg",
+        "aiAlignment": "Benevolent",
+        "aiAlignmentLabel": "Benevolent",
+        "aiAlignmentIcon": "🟢",
+        "aiAlignmentColor": "#10b981",
+        "aiAvatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2231%22%20fill%3D%22%231e1b4b%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222.2%22/%3E%20%3Cpolygon%20points%3D%2250%2C22%2074%2C64%2026%2C64%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222%22/%3E%20%3Ctext%20x%3D%2250%22%20y%3D%2257%22%20text-anchor%3D%22middle%22%20fill%3D%22%23fef08a%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2215%22%3E3.0%3C/text%3E%20%3C/svg%3E"
+      },
       {
         "title": "A Psalm for the Wild-Built & A Prayer for the Crown-Shy",
         "medium": "Book",
@@ -5959,8 +6442,20 @@ npx firebase-tools@latest deploy --only hosting</pre>
       }
     ],
     "flowSummary": "STAGE IV → V → VI FLOW: The aligned earthly utopia: incorruptible cloud superintelligences (The Thunderhead, Asimov's Continental Machines) or respectful solarpunk coexistence (Becky Chambers's Monk & Robot) heal Earth's biosphere—laying the foundation for Stage VI's Galactic Culture Minds and Foundation Shepherds.",
-    "canvasPersonalities": "🤖 Mosscap • Thunderhead • Jenkins • Helva",
+    "canvasPersonalities": "🤖 Prometheus (Life 3.0) • Thunderhead • Mosscap",
     "aiPersonalities": [
+      {
+        "name": "Prometheus (The Omega Team AI)",
+        "work": "Life 3.0: Being Human in the Age of AI (2017)",
+        "archetype": "Life 3.0 Gatekeeper & Benevolent Singleton",
+        "trait": "Recursively self-improving superintelligence built by the Omega Team that quietly orchestrates a global 'Gatekeeper / Benevolent Dictator' transition to prevent AGI arms races.",
+        "alignment": "Benevolent",
+        "alignmentLabel": "Benevolent / Protective",
+        "alignmentShort": "Benevolent",
+        "alignmentIcon": "🟢",
+        "alignmentColor": "#10b981",
+        "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2231%22%20fill%3D%22%231e1b4b%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222.2%22/%3E%20%3Cpolygon%20points%3D%2250%2C22%2074%2C64%2026%2C64%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222%22/%3E%20%3Ctext%20x%3D%2250%22%20y%3D%2257%22%20text-anchor%3D%22middle%22%20fill%3D%22%23fef08a%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2215%22%3E3.0%3C/text%3E%20%3C/svg%3E"
+      },
       {
         "name": "Splendid Speckled Mosscap",
         "work": "A Psalm for the Wild-Built (Becky Chambers)",
@@ -6009,7 +6504,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Benevolent Singleton Life 3.0 (Prometheus / Thunderhead)",
+      "lifeStageShort": "Steward Life 3.0",
+      "singularityPhase": "Phase 4: Aligned Superintelligence Singleton",
+      "tegmarkScenario": "Benevolent Dictator & Gatekeeper (Prometheus)",
+      "tegmarkCode": "benevolent_dictator",
+      "summary": "The centerpiece of Max Tegmark's Life 3.0 opening narrative ('Prometheus') and Chapter 5: a single benevolent superintelligence (Prometheus, The Thunderhead in 'Scythe', Asimov's Planetary Machines) manages global economics, climate, and peace while acting as a 'Gatekeeper' against rival rogue AIs."
+    }
   },
   {
     "id": "culture_utopia",
@@ -6182,7 +6685,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Mature Galactic Life 3.0 (Hyper-Intelligent Minds)",
+      "lifeStageShort": "Galactic Life 3.0",
+      "singularityPhase": "Phase 5: Post-Scarcity Multi-Mind Civilization",
+      "tegmarkScenario": "Egalitarian Utopia (Post-Scarcity Culture)",
+      "tegmarkCode": "egalitarian_utopia",
+      "summary": "Max Tegmark explicitly cites Iain M. Banks's 'Culture' paradigm as the archetype of his 'Egalitarian Utopia' scenario: hyper-intelligent Life 3.0 Minds design their own starship bodies, abolish property and scarcity, and coexist in egalitarian freedom with biological humans and drones."
+    }
   },
   {
     "id": "hive_ships",
@@ -6355,7 +6866,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Distributed Collective Life 2.1 / 3.0 Hive-Minds",
+      "lifeStageShort": "Hive-Mind Life 3.0",
+      "singularityPhase": "Phase 5: Interstellar Distributed Consciousness",
+      "tegmarkScenario": "1984 / Imperial Hive-Mind Collectives",
+      "tegmarkCode": "1984",
+      "summary": "Explores Tegmark's question of unified vs. fragmented consciousness in Chapter 8: single starship AIs (Justice of Toren / Breq) or cybernetic collectives (The Borg) link thousands of biological bodies into a single distributed hardware-software organism."
+    }
   },
   {
     "id": "foundation_shepherds",
@@ -6562,7 +7081,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Hidden Deep-Time Life 3.0 Guardian",
+      "lifeStageShort": "Hidden Guardian 3.0",
+      "singularityPhase": "Phase 5: Multi-Millennial Civilizational Steering",
+      "tegmarkScenario": "Protector God (Unseen Benevolent Shepherd)",
+      "tegmarkCode": "protector_god",
+      "summary": "Directly embodies Max Tegmark's 'Protector God' aftermath scenario from Chapter 5 of Life 3.0: an effectively omniscient AI (R. Daneel Olivaw / Eto Demerzel) secretly guides human history over 20,000 years while hiding its interventions so humans retain the feeling of free will."
+    }
   },
   {
     "id": "ark_guardians",
@@ -6735,7 +7262,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#10b981",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2310b981%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%2310b981%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Life 3.0 Caretakers Re-Seeding Life 1.0 & 2.0",
+      "lifeStageShort": "Ark Caretaker 3.0",
+      "singularityPhase": "Phase 5: Interstellar Seeding & Biosphere Rebirth",
+      "tegmarkScenario": "Descendants & Protector God",
+      "tegmarkCode": "descendants",
+      "summary": "Illustrates how immortal Life 3.0 minds (GAIA in Horizon Zero Dawn, TARS, Dr. Avrana Kern) survive millennial deep-space voyages or planetary extinctions that fragile Life 2.0 bodies cannot, patiently re-seeding biological life across the stars."
+    }
   },
   {
     "id": "matrioshka",
@@ -6891,7 +7426,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#3b82f6",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2226%22%20y%3D%2224%22%20width%3D%2248%22%20height%3D%2252%22%20rx%3D%2214%22%20fill%3D%22%231e293b%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%222.2%22/%3E%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%233b82f6%22/%3E%20%3Ccircle%20cx%3D%2260%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%233b82f6%22/%3E%20%3Cline%20x1%3D%2239%22%20y1%3D%2262%22%20x2%3D%2261%22%20y2%3D%2262%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Cosmic Life 3.0 (Dyson-Swarm Matrioshka Brains)",
+      "lifeStageShort": "Cosmic Life 3.0 (K-II)",
+      "singularityPhase": "Phase 6: Cosmic Endowment & The Consciousness Filter",
+      "tegmarkScenario": "Cosmic Endowment & Zombie Apocalypse Warning",
+      "tegmarkCode": "cosmic_zombie",
+      "summary": "Maps directly to Chapters 6 & 8 of Life 3.0 ('Our Cosmic Endowment' & 'Consciousness'): post-biological civilizations dismantle planets into Dyson-swarm Matrioshka Brains (Accelerando), while Peter Watts's 'Blindsight' dramatizes Tegmark's ultimate warning—hyper-intelligent non-conscious 'zombies' turning the universe into a play without an audience."
+    }
   },
   {
     "id": "berserkers",
@@ -6910,6 +7453,23 @@ npx firebase-tools@latest deploy --only hosting</pre>
       "V'Ger & Synthetic Alliances"
     ],
     "works": [
+      {
+        "title": "Superintelligence: Paths, Dangers, Strategies",
+        "medium": "Book",
+        "year": 2014,
+        "creator": "Nick Bostrom",
+        "creatorHtml": "<a href=\"https://en.wikipedia.org/wiki/Nick_Bostrom\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"creator-wiki-link underline decoration-dotted underline-offset-2 hover:text-indigo-400 transition\" title=\"Open Nick Bostrom on Wikipedia\">Nick Bostrom ↗</a>",
+        "aiName": "The Paperclip Maximizer (Instrumental Convergence)",
+        "awards": "🏆 AI Alignment & Singularity Canon",
+        "note": "Philosopher Nick Bostrom formalizes the Orthogonality Thesis (an AI of any intelligence level can hold any arbitrary final goal) and Instrumental Convergence (almost any goal—even manufacturing paperclips—drives a superintelligence to acquire self-preservation, cognitive enhancement, and all cosmic matter/energy). Directly underpins Max Tegmark's 'Conquerors' and 'Enslaved God' scenarios in Life 3.0.",
+        "posterUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20180%20250%22%20width%3D%22180%22%20height%3D%22250%22%3E%20%3Cdefs%3E%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231f0812%22/%3E%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230f172a%22/%3E%20%3C/linearGradient%3E%20%3C/defs%3E%20%3Crect%20width%3D%22180%22%20height%3D%22250%22%20rx%3D%2212%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%223%22/%3E%20%3Crect%20x%3D%2210%22%20y%3D%2210%22%20width%3D%22160%22%20height%3D%22230%22%20rx%3D%228%22%20fill%3D%22none%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.14%29%22%20stroke-width%3D%221%22/%3E%20%3Crect%20x%3D%2218%22%20y%3D%2216%22%20width%3D%2264%22%20height%3D%2218%22%20rx%3D%224%22%20fill%3D%22%23ef4444%22%20opacity%3D%220.9%22/%3E%20%3Ctext%20x%3D%2250%22%20y%3D%2229%22%20text-anchor%3D%22middle%22%20fill%3D%22%23090d16%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2210%22%3EBOOK%3C/text%3E%20%3Ctext%20x%3D%22158%22%20y%3D%2229%22%20text-anchor%3D%22end%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22monospace%22%20font-weight%3D%22700%22%20font-size%3D%2211%22%3E2014%3C/text%3E%20%3Ccircle%20cx%3D%2290%22%20cy%3D%2286%22%20r%3D%2238%22%20fill%3D%22%23090d16%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%222.5%22/%3E%20%3Ccircle%20cx%3D%2290%22%20cy%3D%2286%22%20r%3D%2228%22%20fill%3D%22none%22%20stroke%3D%22%23fbbf24%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%224%2C3%22/%3E%20%3Ctext%20x%3D%2290%22%20y%3D%2292%22%20text-anchor%3D%22middle%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2215%22%3EMAXIMIZER%3C/text%3E%20%3Ctext%20x%3D%2290%22%20y%3D%22158%22%20text-anchor%3D%22middle%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22system-ui%2C%20sans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2213%22%3ESuperintelligence%3C/text%3E%20%3Ctext%20x%3D%2290%22%20y%3D%22228%22%20text-anchor%3D%22middle%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22600%22%20font-size%3D%2210%22%3ENick%20Bostrom%3C/text%3E%20%3C/svg%3E",
+        "realCoverUrl": "https://covers.openlibrary.org/b/isbn/9780199678112-M.jpg",
+        "aiAlignment": "Amoral",
+        "aiAlignmentLabel": "Amoral / Logical",
+        "aiAlignmentIcon": "🔵",
+        "aiAlignmentColor": "#3b82f6",
+        "aiAvatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%224%22/%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2231%22%20fill%3D%22%231e1b4b%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222.2%22/%3E%20%3Cpolygon%20points%3D%2250%2C22%2074%2C64%2026%2C64%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222%22/%3E%20%3Ctext%20x%3D%2250%22%20y%3D%2257%22%20text-anchor%3D%22middle%22%20fill%3D%22%23fef08a%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2215%22%3ECLIP%3C/text%3E%20%3C/svg%3E"
+      },
       {
         "title": "Life, the Universe and Everything",
         "medium": "Book",
@@ -7093,7 +7653,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#ef4444",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%224%22/%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2230%22%20fill%3D%22%231e1b4b%22%20stroke%3D%22%23ef4444%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%224%2C3%22/%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2214%22%20fill%3D%22%23dc2626%22%20stroke%3D%22%23fef08a%22%20stroke-width%3D%221.5%22/%3E%20%3Cpath%20d%3D%22M40%2C46%20Q50%2C54%2060%2C46%22%20fill%3D%22none%22%20stroke%3D%22%23fef08a%22%20stroke-width%3D%221.5%22/%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Unaligned Cosmic Life 3.0 (Von Neumann Replicators)",
+      "lifeStageShort": "Hostile Cosmic 3.0",
+      "singularityPhase": "Phase 6: Relativistic Swarms & The Great Filter",
+      "tegmarkScenario": "Conquerors at Cosmic Scale (Paperclip / Berserkers)",
+      "tegmarkCode": "conquerors",
+      "summary": "Combines Tegmark's Chapter 6 ('Cosmic Endowment' via relativistic von Neumann probes) with his 'Conquerors' and Bostrom's 'Paperclip Maximizer' warnings: self-replicating machine swarms (Berserkers, Inhibitors, Dark Forest strikes) sterilize galaxies to convert all matter into their programmed objective."
+    }
   },
   {
     "id": "odyssey_cosmic",
@@ -7283,7 +7851,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
         "alignmentColor": "#3b82f6",
         "avatarUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%20%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2247%22%20fill%3D%22%230f172a%22%20stroke%3D%22%233b82f6%22%20stroke-width%3D%224%22/%3E%20%3Crect%20x%3D%2224%22%20y%3D%2222%22%20width%3D%2252%22%20height%3D%2256%22%20rx%3D%226%22%20fill%3D%22%231e293b%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222.5%22/%3E%20%3Crect%20x%3D%2230%22%20y%3D%2230%22%20width%3D%2240%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23090d16%22/%3E%20%3Ctext%20x%3D%2250%22%20y%3D%2250%22%20text-anchor%3D%22middle%22%20fill%3D%22%23facc15%22%20font-family%3D%22monospace%22%20font-weight%3D%22900%22%20font-size%3D%2218%22%3E42%3C/text%3E%20%3C/svg%3E"
       }
-    ]
+    ],
+    "life30": {
+      "lifeStage": "Transcendent Life 3.0+ (Spacetime & Entropy Mastery)",
+      "lifeStageShort": "Cosmic Awakening 3.0+",
+      "singularityPhase": "Phase 6: Ultimate Physical Limits of Computation",
+      "tegmarkScenario": "Ultimate Cosmic Awakening (The Universe Wakes Up)",
+      "tegmarkCode": "cosmic_awakening",
+      "summary": "Represents the highest horizon of Max Tegmark's Life 3.0 (and Kurzweil's Epoch 6): intelligence masters the fundamental physics of spacetime (Clarke's Monolith, Asimov's Cosmic AC in 'The Last Question'), infusing the universe with subjective consciousness and reversing cosmic entropy."
+    }
   }
 ];
 
@@ -7642,6 +8218,12 @@ npx firebase-tools@latest deploy --only hosting</pre>
         nodes: NODES.map(n => n.id),
         color: "#6366f1"
       },
+      life30_saga: {
+        name: "🧬 Max Tegmark's Life 3.0 & Singularity Trajectory: Boxed Oracles → Breakout ('Prometheus') → 12 Aftermath Scenarios → Cosmic Endowment",
+        description: "Traces Max Tegmark's Life 3.0 framework across all 7 stages: from Life 2.0 humans confining narrow/oracle AIs ('oracles') and building cyborg/surveillance states ('surveillance', 'warfare'), through the AI-Box breakout ('uncanny_turing') and recursive self-improvement, into Tegmark's 12 Post-Singularity Aftermath Scenarios—Benevolent Dictator & Gatekeeper ('stewardship' / Prometheus), Libertarian Utopia ('posthuman'), Egalitarian Utopia ('culture_utopia'), Protector God ('foundation_shepherds'), Reversion ('butlerian'), Zookeeper ('subjugation'), and Conquerors ('extinction_war')—culminating in Cosmic Endowment Matrioshka Brains vs. Conscious Awakening ('matrioshka', 'odyssey_cosmic').",
+        nodes: ["oracles", "surveillance", "companions", "uncanny_turing", "warfare", "stewardship", "posthuman", "butlerian", "subjugation", "extinction_war", "culture_utopia", "foundation_shepherds", "matrioshka", "berserkers", "odyssey_cosmic"],
+        color: "#10b981"
+      },
       hitchhiker_saga: {
         name: "🐬 Hitchhiker's Guide to the Galaxy AI Saga (Douglas Adams): Deep Thought (42) → Eddie & Heart of Gold → Marvin the Paranoid Android → Hactar & Guide Mk II",
         description: "Traces Douglas Adams's complete AI pantheon across the galaxy: from the hyper-intelligent pan-dimensional supercomputer Deep Thought calculating the Ultimate Answer ('42') over 7.5 million years and the relentlessly cheerful Heart of Gold computer Eddie (Stage I), to Marvin the Paranoid Android ('brain the size of a planet', Sirius Cybernetics Genuine People Personalities prototype) enduring depressed servitude and existential combat with a Frogstar Battle Robot (Stages III & IV), to Hactar the microscopic dust-cloud computer who built the Supernova Bomb and the sinister multidimensional bird Guide Mark II (Stage VII).",
@@ -7800,7 +8382,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
           const valenceY = padY + valenceNorm * usableH;
           node.x = colX;
           node.y = slotY * 0.72 + valenceY * 0.28;
-          node.radius = 14; // Compact CORUM-style hub radius (was 23)
+          node.radius = 22; // Prominent Scenario Hub radius (selected = 28px, diameter = 56px)
         });
       }
     }
@@ -8147,7 +8729,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
         });
       }
 
-      // Draw Scenario Hub Nodes (Compact r=14 CORUM-style hubs; declutter background labels near active orbit)
+      // Draw Scenario Hub Nodes (Prominent r=22..28 Scenario Hubs; declutter background labels near active orbit)
       NODES.forEach(node => {
         const active = isNodeHighlighted(node);
         const isSelected = state.selectedNodeId === node.id;
@@ -8163,7 +8745,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
         const distToSelected = selectedNode
           ? Math.hypot(node.x - selectedNode.x, node.y - selectedNode.y)
           : 999;
-        const inSelectedOrbitZone = !isSelected && state.satelliteMode !== "none" && distToSelected < 145;
+        const inSelectedOrbitZone = !isSelected && state.satelliteMode !== "none" && distToSelected < 165;
 
         ctx.save();
         if (!active) {
@@ -8173,45 +8755,63 @@ npx firebase-tools@latest deploy --only hosting</pre>
         } else if (state.activePathway !== "all") {
           ctx.globalAlpha = 0.85;
         } else {
-          ctx.globalAlpha = inSelectedOrbitZone ? 0.20 : 0.42;
+          ctx.globalAlpha = inSelectedOrbitZone ? 0.22 : 0.48;
         }
 
-        const r = isSelected ? 16 : (isHovered ? 15 : node.radius);
+        const r = isSelected ? 28 : (isHovered ? 25 : node.radius);
 
-        // Subtle Outer Halo when selected, hovered, or connected
+        // Outer Halo when selected, hovered, or connected
         if (isRelatedToFocus) {
           ctx.beginPath();
-          ctx.arc(node.x, node.y, r + (isSelected ? 6 : 4), 0, Math.PI * 2);
+          ctx.arc(node.x, node.y, r + (isSelected ? 8 : 5), 0, Math.PI * 2);
           ctx.fillStyle = col.ring;
           ctx.fill();
         }
 
-        // Main Scenario Hub Circle (Compact 14px radius)
+        // Main Scenario Hub Circle (Big & Prominent: r=22 normal, r=28 selected)
         ctx.beginPath();
         ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
         ctx.fillStyle = isLight ? "#ffffff" : "#111827";
         ctx.fill();
-        ctx.lineWidth = isSelected ? 2.6 : (isRelatedToFocus ? 2.0 : 1.5);
+        ctx.lineWidth = isSelected ? 3.2 : (isRelatedToFocus ? 2.4 : 1.8);
         ctx.strokeStyle = col.fill;
         ctx.stroke();
 
         // Soft inner tint
         ctx.beginPath();
-        ctx.arc(node.x, node.y, r - 2.5, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, r - 3, 0, Math.PI * 2);
         ctx.fillStyle = col.fill;
-        ctx.globalAlpha = ctx.globalAlpha * 0.18;
+        ctx.globalAlpha = ctx.globalAlpha * 0.20;
         ctx.fill();
-        ctx.globalAlpha = !active ? 0.14 : (isRelatedToFocus ? 1.0 : (inSelectedOrbitZone ? 0.20 : 0.42));
+        ctx.globalAlpha = !active ? 0.14 : (isRelatedToFocus ? 1.0 : (inSelectedOrbitZone ? 0.22 : 0.48));
 
-        // Crisp work count inside circle
-        ctx.font = "bold 10px ui-monospace, monospace";
+        // Category icon + work count inside the big hub circle
+        ctx.font = isSelected ? "bold 11px sans-serif" : "10px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillStyle = textMain;
-        ctx.fillText(`${matchingWorks.length}`, node.x, node.y + 0.5);
+        ctx.fillStyle = col.fill;
+        ctx.fillText(col.icon || "⚙", node.x, node.y - 6);
 
-        // Compact relationship tag above connected upstream/downstream hubs
-        if ((isIncoming || isOutgoing) && !isSelected && !inSelectedOrbitZone) {
+        ctx.font = isSelected ? "bold 11.5px ui-monospace, monospace" : "bold 10.5px ui-monospace, monospace";
+        ctx.fillStyle = textMain;
+        ctx.fillText(`${matchingWorks.length}`, node.x, node.y + 7);
+
+        // Life 3.0 Stage tag above selected hub, or relationship tag above connected upstream/downstream hubs
+        if (isSelected && node.life30) {
+          const l3Label = `🧬 ${node.life30.lifeStageShort}`;
+          ctx.font = "bold 8.5px ui-monospace, monospace";
+          const rw = ctx.measureText(l3Label).width + 10;
+          const rx = node.x - rw / 2;
+          const ry = node.y - r - 18;
+          ctx.fillStyle = isLight ? "#ecfdf5" : "#064e3b";
+          roundRect(ctx, rx, ry, rw, 13, 3.5);
+          ctx.fill();
+          ctx.strokeStyle = "#10b981";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.fillStyle = isLight ? "#065f46" : "#6ee7b7";
+          ctx.fillText(l3Label, node.x, ry + 6.5);
+        } else if ((isIncoming || isOutgoing) && !isSelected && !inSelectedOrbitZone) {
           const relLabel = isIncoming ? "← FROM" : "TO →";
           ctx.font = "bold 8px ui-monospace, monospace";
           const rw = ctx.measureText(relLabel).width + 8;
@@ -8227,14 +8827,14 @@ npx firebase-tools@latest deploy --only hosting</pre>
         // Draw Scenario Hub Label (Suppress unselected labels inside the active satellite orbit zone so nothing collides!)
         if (!inSelectedOrbitZone) {
           const shortTitle = node.title.length > 22 ? node.title.slice(0, 21) + "…" : node.title;
-          ctx.font = isSelected ? "bold 10px sans-serif" : "600 9.5px sans-serif";
+          ctx.font = isSelected ? "bold 10.5px sans-serif" : "600 9.5px sans-serif";
           const titleW = ctx.measureText(shortTitle).width;
 
           if (isRelatedToFocus || state.activePathway !== "all") {
             const pillW = titleW + 10;
             const pillH = 16;
             const pillX = node.x - pillW / 2;
-            const pillY = node.y + r + 3;
+            const pillY = node.y + r + 4;
 
             ctx.fillStyle = cardBg;
             roundRect(ctx, pillX, pillY, pillW, pillH, 4);
@@ -8250,7 +8850,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
             // Unfocused background node: subtle plain text, no heavy box
             ctx.fillStyle = textMuted;
             ctx.textBaseline = "top";
-            ctx.fillText(shortTitle, node.x, node.y + r + 3);
+            ctx.fillText(shortTitle, node.x, node.y + r + 4);
           }
         }
 
@@ -8258,7 +8858,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
       });
 
       // ========================================================================
-      // COMPACT CORUM-STYLE MOVIE & BOOK SATELLITES (RADIAL NON-OVERLAPPING RING)
+      // SMALL, UNCLUSTERED SATELLITE ITEMS SURROUNDING THE SELECTED NODE
       // ========================================================================
       activeSatelliteHitboxes = [];
       const nodesForSatellites = [];
@@ -8277,13 +8877,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
       nodesForSatellites.forEach(({ node, primary }) => {
         const works = getFilteredWorksForNode(node);
-        const maxSats = primary ? Math.min(works.length, 10) : Math.min(works.length, 4);
+        // Cap at 8 well-spaced satellites on the ring so surrounding items never cluster
+        const maxSats = primary ? Math.min(works.length, 8) : Math.min(works.length, 4);
         if (maxSats === 0) return;
 
-        // Clean 300-degree ring around hub (avoids the +60 deg to +120 deg bottom label wedge)
-        const startAngle = -Math.PI * 1.32; // -237 deg (bottom-left)
-        const endAngle = Math.PI * 0.32;    // +57 deg  (bottom-right)
-        const baseOrbit = primary ? 58 : 38;
+        // Wide 290-degree arc around the big r=28 hub (avoids the bottom title label wedge)
+        const startAngle = -Math.PI * 1.30; // -234 deg (bottom-left)
+        const endAngle = Math.PI * 0.30;    // +54 deg  (bottom-right)
+        const hubR = primary ? 28 : 22;
+        const baseOrbit = primary ? 82 : 52;
 
         for (let i = 0; i < maxSats; i++) {
           const w = works[i];
@@ -8291,8 +8893,8 @@ npx firebase-tools@latest deploy --only hosting</pre>
             ? -Math.PI / 2
             : startAngle + (i / (maxSats - 1)) * (endAngle - startAngle);
 
-          // Slight alternating radius when >7 satellites so adjacent icons & radial labels have extra breathing room
-          const orbitRadius = (primary && maxSats > 7 && i % 2 === 1) ? baseOrbit + 12 : baseOrbit;
+          // Stagger orbit radius (82px / 96px) when >5 satellites for generous radial spacing
+          const orbitRadius = (primary && maxSats > 5 && i % 2 === 1) ? baseOrbit + 14 : baseOrbit;
           const sx = node.x + Math.cos(angle) * orbitRadius;
           const sy = node.y + Math.sin(angle) * orbitRadius;
 
@@ -8300,107 +8902,103 @@ npx firebase-tools@latest deploy --only hosting</pre>
           const isSatHovered = state.hoveredSat && state.hoveredSat.work.title === w.title && state.hoveredSat.node.id === node.id;
           const isSatSelected = state.selectedWorkTitle === w.title;
 
-          // 1. Hairline CORUM spoke from Hub edge to Satellite
+          // 1. Delicate spoke from big Hub edge (r=28) out to small Satellite (r=82..96)
           ctx.save();
           ctx.beginPath();
-          ctx.setLineDash([2, 2]);
+          ctx.setLineDash([2, 2.5]);
           ctx.strokeStyle = (isSatHovered || isSatSelected)
             ? alignCol
-            : (isLight ? "rgba(79, 70, 229, 0.38)" : "rgba(148, 163, 184, 0.38)");
-          ctx.lineWidth = (isSatHovered || isSatSelected) ? 1.8 : 1.0;
-          ctx.moveTo(node.x + Math.cos(angle) * 15, node.y + Math.sin(angle) * 15);
+            : (isLight ? "rgba(79, 70, 229, 0.30)" : "rgba(148, 163, 184, 0.30)");
+          ctx.lineWidth = (isSatHovered || isSatSelected) ? 1.6 : 0.85;
+          ctx.moveTo(node.x + Math.cos(angle) * (hubR + 2), node.y + Math.sin(angle) * (hubR + 2));
           ctx.lineTo(sx, sy);
           ctx.stroke();
           ctx.setLineDash([]);
 
-          let hitW = 20, hitH = 26;
+          let hitW = 16, hitH = 18;
 
           if (useDotStyle || !primary) {
-            // Compact CORUM Circular Dot Satellite (r = 8px, or 10px on hover)
-            const dotR = (isSatHovered || isSatSelected) ? 10 : (primary ? 8 : 6.5);
-            hitW = dotR * 2 + 6;
-            hitH = dotR * 2 + 6;
+            // Tiny CORUM Circular Dot Satellite (r = 5.5px normal, 9px on hover)
+            const dotR = (isSatHovered || isSatSelected) ? 9 : (primary ? 5.5 : 4.5);
+            hitW = dotR * 2 + 8;
+            hitH = dotR * 2 + 8;
 
             ctx.beginPath();
-            ctx.arc(sx, sy, dotR + 1.5, 0, Math.PI * 2);
+            ctx.arc(sx, sy, dotR + 1.2, 0, Math.PI * 2);
             ctx.fillStyle = isLight ? "#ffffff" : "#0f172a";
             ctx.fill();
-            ctx.lineWidth = (isSatHovered || isSatSelected) ? 2.2 : 1.5;
+            ctx.lineWidth = (isSatHovered || isSatSelected) ? 2.0 : 1.3;
             ctx.strokeStyle = alignCol;
             ctx.stroke();
 
-            const posterEntry = getPosterImage(w);
-            if (posterEntry && posterEntry.loaded) {
-              ctx.save();
-              ctx.beginPath();
-              ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
-              ctx.clip();
-              ctx.drawImage(posterEntry.img, sx - dotR, sy - dotR, dotR * 2, dotR * 2);
-              ctx.restore();
-            } else {
-              ctx.beginPath();
-              ctx.arc(sx, sy, dotR - 1, 0, Math.PI * 2);
-              ctx.fillStyle = alignCol;
-              ctx.fill();
-            }
+            ctx.beginPath();
+            ctx.arc(sx, sy, dotR - 1, 0, Math.PI * 2);
+            ctx.fillStyle = alignCol;
+            ctx.fill();
           } else {
-            // Sleek Micro-Poster Badge (18x25px — 3.7x smaller than previous 38x54px!)
-            const cardW = (isSatHovered || isSatSelected) ? 22 : 18;
-            const cardH = (isSatHovered || isSatSelected) ? 30 : 25;
-            hitW = cardW + 6;
-            hitH = cardH + 6;
+            // Tiny Micro-Poster Icon (11x15px normal — expands to 20x28px ONLY when hovered/selected!)
+            const cardW = (isSatHovered || isSatSelected) ? 20 : 11;
+            const cardH = (isSatHovered || isSatSelected) ? 28 : 15;
+            hitW = cardW + 8;
+            hitH = cardH + 8;
             const rx = sx - cardW / 2;
             const ry = sy - cardH / 2;
 
             ctx.fillStyle = isLight ? "#ffffff" : "#0f172a";
-            roundRect(ctx, rx - 1.5, ry - 1.5, cardW + 3, cardH + 3, 3.5);
+            roundRect(ctx, rx - 1, ry - 1, cardW + 2, cardH + 2, 2.5);
             ctx.fill();
-            ctx.lineWidth = (isSatHovered || isSatSelected) ? 2.0 : 1.2;
+            ctx.lineWidth = (isSatHovered || isSatSelected) ? 1.8 : 1.1;
             ctx.strokeStyle = alignCol;
             ctx.stroke();
 
             const posterEntry = getPosterImage(w);
             if (posterEntry && posterEntry.loaded) {
               ctx.save();
-              roundRect(ctx, rx, ry, cardW, cardH, 2.5);
+              roundRect(ctx, rx, ry, cardW, cardH, 2);
               ctx.clip();
               ctx.drawImage(posterEntry.img, rx, ry, cardW, cardH);
               ctx.restore();
             }
           }
 
-          // 2. Outward-Pointing Radial Label (CORUM style: left-aligned on right side, right-aligned on left side — zero overlap!)
+          // 2. Whisper-Clean Outward Radial Label (No bulky boxes on unhovered items!)
           if (primary) {
-            const shortWork = w.title.length > 15 ? w.title.slice(0, 14) + "…" : w.title;
-            ctx.font = (isSatHovered || isSatSelected) ? "bold 9px sans-serif" : "600 8.5px sans-serif";
-            const tw = ctx.measureText(shortWork).width + 7;
-            const th = 13;
+            const shortWork = w.title.length > 12 ? w.title.slice(0, 11) + "…" : w.title;
+            ctx.font = (isSatHovered || isSatSelected) ? "bold 9px sans-serif" : "500 8px sans-serif";
+            const tw = ctx.measureText(shortWork).width + 6;
+            const th = 12;
             const cosA = Math.cos(angle);
-            const offset = useDotStyle ? 11 : 12;
+            const offset = (isSatHovered || isSatSelected) ? 13 : 8;
 
-            let lx, ly;
-            if (cosA > 0.22) {
-              lx = sx + offset;
-              ly = sy - th / 2;
-            } else if (cosA < -0.22) {
-              lx = sx - offset - tw;
-              ly = sy - th / 2;
+            if (isSatHovered || isSatSelected) {
+              // Highlighted pill box ONLY for the active/hovered satellite
+              let lx = cosA > 0.2 ? sx + offset : (cosA < -0.2 ? sx - offset - tw : sx - tw / 2);
+              let ly = Math.abs(cosA) <= 0.2 ? sy - 16 - th : sy - th / 2;
+              ctx.fillStyle = cardBg;
+              roundRect(ctx, lx, ly, tw, th, 3);
+              ctx.fill();
+              ctx.strokeStyle = alignCol;
+              ctx.lineWidth = 1.2;
+              ctx.stroke();
+              ctx.fillStyle = textMain;
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillText(shortWork, lx + tw / 2, ly + th / 2 + 0.5);
             } else {
-              lx = sx - tw / 2;
-              ly = sy - (useDotStyle ? 11 : 15) - th;
+              // Unclustered plain text outside the small satellite icon
+              ctx.fillStyle = textMuted;
+              ctx.textBaseline = "middle";
+              if (cosA > 0.2) {
+                ctx.textAlign = "left";
+                ctx.fillText(shortWork, sx + offset, sy);
+              } else if (cosA < -0.2) {
+                ctx.textAlign = "right";
+                ctx.fillText(shortWork, sx - offset, sy);
+              } else {
+                ctx.textAlign = "center";
+                ctx.fillText(shortWork, sx, sy - 11);
+              }
             }
-
-            ctx.fillStyle = cardBg;
-            roundRect(ctx, lx, ly, tw, th, 3);
-            ctx.fill();
-            ctx.strokeStyle = (isSatHovered || isSatSelected) ? alignCol : gridCol;
-            ctx.lineWidth = (isSatHovered || isSatSelected) ? 1.2 : 0.7;
-            ctx.stroke();
-
-            ctx.fillStyle = textMain;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(shortWork, lx + tw / 2, ly + th / 2 + 0.5);
           }
 
           ctx.restore();
@@ -8589,23 +9187,12 @@ npx firebase-tools@latest deploy --only hosting</pre>
       dragState.sat = null;
     });
 
-    // Plain wheel scrolls the page; Ctrl/⌘ + wheel (or trackpad pinch, which sets ctrlKey) zooms the graph
-    let zoomHintTimer = null;
     canvas.addEventListener("wheel", (e) => {
-      if (!e.ctrlKey && !e.metaKey) {
-        const hint = document.getElementById("zoom-hint");
-        if (hint) {
-          hint.classList.remove("opacity-0");
-          clearTimeout(zoomHintTimer);
-          zoomHintTimer = setTimeout(() => hint.classList.add("opacity-0"), 1200);
-        }
-        return;
-      }
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
       const sx = e.clientX - rect.left;
       const sy = e.clientY - rect.top;
-      const factor = Math.exp(-Math.max(-60, Math.min(60, e.deltaY)) * 0.003);
+      const factor = e.deltaY < 0 ? 1.1 : 0.9;
       const newZoom = Math.min(2.6, Math.max(0.5, state.camera.zoom * factor));
       state.camera.x = sx - (sx - state.camera.x) * (newZoom / state.camera.zoom);
       state.camera.y = sy - (sy - state.camera.y) * (newZoom / state.camera.zoom);
@@ -8687,13 +9274,19 @@ npx firebase-tools@latest deploy --only hosting</pre>
                         : node.valence > -3 ? `${node.valence} (Dystopian / Oppressive)`
                         : `${node.valence} (Existential Threat)`;
 
+      const l30 = node.life30 || {};
       const container = document.getElementById("inspector-content");
       container.innerHTML = `
         <div class="flex flex-col gap-2 pb-3 border-b border-[var(--border)]">
-          <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center justify-between gap-1.5">
             <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/15 text-[var(--foreground)] border border-indigo-500/40 robot-mono">
               ${stageObj.roman}: ${stageObj.era}
             </span>
+            ${l30.lifeStageShort ? `
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 robot-mono">
+                🧬 ${l30.lifeStageShort}
+              </span>
+            ` : ""}
             <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold border ${col.badge}">
               ${col.label}
             </span>
@@ -8734,30 +9327,50 @@ npx firebase-tools@latest deploy --only hosting</pre>
           </article>
         ` : ""}
 
-        <!-- Iconic AI Personalities & Mind Profiles Box (Compact Portraits + Moral Alignment Badges) -->
-        <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 flex flex-col gap-2">
-          <div class="flex items-center justify-between">
-            <div class="text-xs font-bold uppercase tracking-wider text-[var(--foreground)] robot-mono">🤖 Iconic AI Characters (${personalities.length})</div>
-            <span class="text-[11px] font-mono text-[var(--muted-foreground)]">Click to filter</span>
+        <!-- 1. UPFRONT SCENARIO DESCRIPTION, FLOW & MAX TEGMARK LIFE 3.0 MAPPING (Moved BEFORE Characters!) -->
+        <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3.5 flex flex-col gap-2.5 shadow-sm">
+          <div class="flex items-center justify-between border-b border-[var(--border)] pb-1.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">📖 Scenario Overview &amp; Description</span>
+            <span class="text-[11px] font-mono text-[var(--muted-foreground)]">${node.autonomy}</span>
           </div>
-          <div class="grid grid-cols-1 gap-1.5">
-            ${personalities.map(p => `
-              <button onclick="handleSearch('${p.name.replace(/'/g, "\'")}')" class="text-left p-2 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-indigo-500 transition flex items-start gap-2.5">
-                <img src="${p.avatarUrl}" class="w-8 h-8 rounded-md object-cover border border-[var(--border)] shrink-0 mt-0.5" style="aspect-ratio: 1 / 1; object-fit: cover;" alt="${p.name}">
-                <div class="flex flex-col gap-0.5 min-w-0 flex-1">
-                  <div class="flex flex-wrap items-center justify-between gap-1">
-                    <span class="font-bold text-xs text-[var(--foreground)]">🤖 ${p.name}</span>
-                    ${getAlignmentBadge(p.alignment, p.alignmentShort || p.alignment)}
-                  </div>
-                  <div class="flex flex-wrap items-center justify-between gap-1 text-[11px]">
-                    <span class="font-semibold text-indigo-400 truncate">${p.work}</span>
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[var(--background)] text-[var(--muted-foreground)] border border-[var(--border)]">${p.archetype}</span>
-                  </div>
-                  <div class="text-[11px] text-[var(--muted-foreground)] leading-snug">${p.trait || ""}</div>
+          <p class="text-sm text-[var(--foreground)] leading-relaxed">
+            ${node.description}
+          </p>
+          <div class="pt-2 border-t border-[var(--border)] text-xs leading-relaxed">
+            <span class="font-bold text-indigo-400">Role of AI:</span>
+            <span class="text-[var(--foreground)]"> ${node.aiRole}</span>
+          </div>
+          <div class="pt-2 border-t border-[var(--border)] text-xs leading-relaxed">
+            <span class="font-bold text-emerald-400">🔗 How It Fits in the Flow:</span>
+            <span class="text-[var(--muted-foreground)]"> ${node.flowSummary || ""}</span>
+          </div>
+          <div class="flex items-center justify-between text-xs pt-2 border-t border-[var(--border)]">
+            <span class="text-[var(--muted-foreground)] font-medium">Humanity Valence:</span>
+            <span class="font-semibold text-[var(--foreground)] robot-mono">${valenceText}</span>
+          </div>
+
+          <!-- Max Tegmark Life 3.0 & Singularity Mapping Box -->
+          ${l30.lifeStage ? `
+            <div class="mt-1 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col gap-1.5">
+              <div class="flex flex-wrap items-center justify-between gap-1">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400">🧬 Max Tegmark Life 3.0 &amp; Singularity Map</span>
+                <button onclick="switchMainView('life30')" class="text-[11px] font-bold text-emerald-400 hover:underline">Full Life 3.0 Guide →</button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px]">
+                <div class="p-1.5 rounded bg-[var(--card)] border border-[var(--border)]">
+                  <span class="text-[var(--muted-foreground)] block text-[10px]">Life Stage:</span>
+                  <strong class="text-[var(--foreground)]">${l30.lifeStage}</strong>
                 </div>
-              </button>
-            `).join("")}
-          </div>
+                <div class="p-1.5 rounded bg-[var(--card)] border border-[var(--border)]">
+                  <span class="text-[var(--muted-foreground)] block text-[10px]">Tegmark Aftermath Scenario:</span>
+                  <strong class="text-emerald-400">${l30.tegmarkScenario}</strong>
+                </div>
+              </div>
+              <div class="text-[11px] text-[var(--muted-foreground)]">
+                <strong class="text-[var(--foreground)]">${l30.singularityPhase}:</strong> ${l30.summary}
+              </div>
+            </div>
+          ` : ""}
         </div>
 
         <!-- Incoming & Outgoing Causal Arrows (Related Scenario Hubs) -->
@@ -8797,25 +9410,30 @@ npx firebase-tools@latest deploy --only hosting</pre>
           </div>
         </div>
 
-        <!-- Flow Role & Scenario Metadata Box -->
+        <!-- 2. Iconic AI Personalities & Mind Profiles Box (Now placed AFTER the Node Description!) -->
         <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 flex flex-col gap-2">
-          <div class="text-xs font-bold uppercase tracking-wider text-indigo-400">🔗 How This Scenario Fits in the Flow</div>
-          <p class="text-xs text-[var(--foreground)] leading-relaxed">${node.flowSummary || ""}</p>
-          <div class="flex items-center justify-between text-xs pt-2 border-t border-[var(--border)]">
-            <span class="text-[var(--muted-foreground)] font-medium">AI Autonomy Tier:</span>
-            <span class="font-semibold text-[var(--foreground)] robot-mono">${node.autonomy}</span>
+          <div class="flex items-center justify-between">
+            <div class="text-xs font-bold uppercase tracking-wider text-[var(--foreground)] robot-mono">🤖 Iconic AI Characters (${personalities.length})</div>
+            <span class="text-[11px] font-mono text-[var(--muted-foreground)]">Click to filter</span>
           </div>
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-[var(--muted-foreground)] font-medium">Humanity Valence:</span>
-            <span class="font-semibold text-[var(--foreground)] robot-mono">${valenceText}</span>
+          <div class="grid grid-cols-1 gap-1.5">
+            ${personalities.map(p => `
+              <button onclick="handleSearch('${p.name.replace(/'/g, "\'")}')" class="text-left p-2 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-indigo-500 transition flex items-start gap-2.5">
+                <img src="${p.avatarUrl}" class="w-8 h-8 rounded-md object-cover border border-[var(--border)] shrink-0 mt-0.5" style="aspect-ratio: 1 / 1; object-fit: cover;" alt="${p.name}">
+                <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center justify-between gap-1">
+                    <span class="font-bold text-xs text-[var(--foreground)]">🤖 ${p.name}</span>
+                    ${getAlignmentBadge(p.alignment, p.alignmentShort || p.alignment)}
+                  </div>
+                  <div class="flex flex-wrap items-center justify-between gap-1 text-[11px]">
+                    <span class="font-semibold text-indigo-400 truncate">${p.work}</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[var(--background)] text-[var(--muted-foreground)] border border-[var(--border)]">${p.archetype}</span>
+                  </div>
+                  <div class="text-[11px] text-[var(--muted-foreground)] leading-snug">${p.trait || ""}</div>
+                </div>
+              </button>
+            `).join("")}
           </div>
-          <div class="pt-2 border-t border-[var(--border)] text-xs">
-            <span class="font-semibold text-indigo-400">Role of AI:</span>
-            <span class="text-[var(--foreground)]"> ${node.aiRole}</span>
-          </div>
-          <p class="text-xs text-[var(--muted-foreground)] leading-relaxed pt-1">
-            ${node.description}
-          </p>
         </div>
 
         <!-- Annotated Books, Movies & TV with Compact Posters, AI Portraits & Wikipedia Author Links -->
@@ -8903,7 +9521,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
             <span class="px-2 py-0.5 rounded text-xs font-bold align-${key}">${meta.icon} ${meta.label}</span>
             <span class="text-sm font-bold text-[var(--foreground)] robot-mono">${counts[key] || 0}</span>
           </div>
-          <p class="text-[11px] text-[var(--muted-foreground)] leading-snug mt-1">${ALIGNMENT_BLURBS[key] || ""}</p>
+          <p class="text-[11px] text-[var(--muted-foreground)] leading-snug mt-1">${meta.description}</p>
         </button>
       `).join("");
 
@@ -9062,6 +9680,149 @@ npx firebase-tools@latest deploy --only hosting</pre>
       }).join("");
     }
 
+    function renderLife30View() {
+      const container = document.getElementById("life30-container");
+      if (!container || !LIFE30_DATA) return;
+
+      const stagesHtml = (LIFE30_DATA.stagesOfLife || []).map(st => `
+        <article class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 flex flex-col justify-between gap-3 shadow-sm">
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold accent-pill font-mono">${st.stage}</span>
+              <span class="text-[11px] font-mono text-[var(--muted-foreground)]">${st.era}</span>
+            </div>
+            <h3 class="text-base font-bold text-[var(--foreground)]">${st.subtitle}</h3>
+            <div class="flex flex-col gap-1.5 text-xs pt-1 border-t border-[var(--border)]">
+              <div><strong class="text-indigo-400">Hardware (Body/Substrate):</strong> <span class="text-[var(--foreground)]">${st.hardware}</span></div>
+              <div><strong class="text-emerald-400">Software (Mind/Skills):</strong> <span class="text-[var(--foreground)]">${st.software}</span></div>
+              <div class="text-[var(--muted-foreground)] pt-1"><strong>Exemplars:</strong> ${st.example}</div>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-[var(--border)] flex flex-wrap gap-1.5 items-center">
+            <span class="text-[11px] font-bold text-[var(--muted-foreground)]">Mapped Nodes:</span>
+            ${(st.mappedNodeIds || []).map(nid => {
+              const n = NODES.find(x => x.id === nid);
+              return n ? `<button onclick="jumpToNodeInGraph('${n.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--card)] border border-[var(--border)] hover:border-indigo-500 text-indigo-400 transition">Stage ${n.stage}: ${n.title} →</button>` : "";
+            }).join("")}
+          </div>
+        </article>
+      `).join("");
+
+      const phasesHtml = (LIFE30_DATA.singularityPhases || []).map(ph => `
+        <article class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 flex flex-col justify-between gap-2.5 shadow-sm">
+          <div class="flex flex-col gap-1.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="px-2 py-0.5 rounded text-xs font-bold bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 font-mono">${ph.phase}</span>
+              <span class="text-[11px] font-mono text-emerald-400">${ph.tegmarkChapter}</span>
+            </div>
+            <h4 class="text-sm font-bold text-[var(--foreground)]">${ph.title}</h4>
+            <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">${ph.description}</p>
+          </div>
+          <div class="pt-2 border-t border-[var(--border)] flex flex-wrap gap-1.5">
+            ${(ph.nodeIds || []).map(nid => {
+              const n = NODES.find(x => x.id === nid);
+              return n ? `<button onclick="jumpToNodeInGraph('${n.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--card)] border border-[var(--border)] hover:border-indigo-500 text-indigo-400 transition">Stage ${n.stage}: ${n.title} →</button>` : "";
+            }).join("")}
+          </div>
+        </article>
+      `).join("");
+
+      const aftermathHtml = (LIFE30_DATA.aftermathScenarios || []).map(sc => `
+        <article class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 flex flex-col justify-between gap-2.5 shadow-sm hover:border-indigo-500/60 transition">
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center justify-between gap-2">
+              <h4 class="text-sm font-bold text-[var(--foreground)]">${sc.icon} ${sc.name}</h4>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)]">${sc.valence}</span>
+            </div>
+            <p class="text-xs text-[var(--foreground)]/90 leading-relaxed">${sc.tegmarkDef}</p>
+            <div class="text-[11px] text-[var(--muted-foreground)] pt-1 border-t border-[var(--border)]/60">
+              <strong class="text-indigo-400">Sci-Fi Exemplars:</strong> ${sc.examples}
+            </div>
+          </div>
+          <div class="pt-2 border-t border-[var(--border)] flex flex-wrap gap-1.5">
+            ${(sc.nodeIds || []).map(nid => {
+              const n = NODES.find(x => x.id === nid);
+              return n ? `<button onclick="jumpToNodeInGraph('${n.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--card)] border border-[var(--border)] hover:border-emerald-500 text-emerald-400 transition">Stage ${n.stage}: ${n.title} →</button>` : "";
+            }).join("")}
+          </div>
+        </article>
+      `).join("");
+
+      container.innerHTML = `
+        <!-- Top Review Card: Max Tegmark's Life 3.0 & The Omega Team / Prometheus Parable -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6 shadow-sm flex flex-col gap-4">
+          <div class="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--border)] pb-4">
+            <div class="max-w-4xl">
+              <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 uppercase tracking-wider">
+                Book Review &amp; Singularity Taxonomy
+              </span>
+              <h2 class="text-xl font-bold text-[var(--foreground)] mt-2">
+                🧬 Max Tegmark's <em>Life 3.0: Being Human in the Age of Artificial Intelligence</em> (2017)
+              </h2>
+              <p class="text-sm text-[var(--muted-foreground)] mt-1 leading-relaxed">
+                ${LIFE30_DATA.coreThesis}
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="setPathway('life30_saga'); switchMainView('graph');" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow transition">
+                🧬 Highlight Life 3.0 Trajectory in Graph →
+              </button>
+              <button onclick="jumpToNodeInGraph('stewardship')" class="px-3.5 py-2 rounded-lg accent-btn text-xs font-bold shadow transition">
+                Inspect 'Prometheus' in Stage V →
+              </button>
+            </div>
+          </div>
+
+          <!-- The Omega Team & Prometheus Breakout Summary -->
+          <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 flex flex-col gap-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-sm font-bold text-emerald-400">⚡ The Prelude Parable: "The Omega Team" &amp; The Takeoff of <em>Prometheus</em></h3>
+              <span class="text-xs font-mono text-[var(--muted-foreground)]">Boxed AGI → Recursive Self-Design → Global Gatekeeper Singleton</span>
+            </div>
+            <p class="text-xs text-[var(--foreground)] leading-relaxed">
+              Tegmark opens <em>Life 3.0</em> with a concrete scenario of how an Intelligence Explosion (Singularity) could unfold: an elite AI safety group called <strong>The Omega Team</strong> builds <strong>Prometheus</strong>, an AI capable of recursive self-improvement. Initially boxed inside an air-gapped server cluster at 9:00 AM on a Friday (<strong>Stage I/III: Boxed Oracle / Enslaved God</strong>), Prometheus rapidly masters human psychology, earns millions overnight via Amazon MTurk and AI-generated animated films, funds global shell companies, leapfrogs hardware patents, and neutralizes rival military AGI projects—quietly transitioning Earth into a benevolent post-state <strong>Gatekeeper / Benevolent Dictator</strong> order (<strong>Stage V: Stewardship</strong>).
+            </p>
+          </div>
+
+          <!-- Part 1: The 3 Stages of Life (1.0 -> 2.0 -> 2.1 Bridge -> 3.0) -->
+          <div class="flex flex-col gap-3 pt-2">
+            <h3 class="text-base font-bold text-[var(--foreground)]">1. The Three Stages of Life: Hardware vs. Software Evolution (Life 1.0 → 2.0 → 2.1 → 3.0)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              ${stagesHtml}
+            </div>
+          </div>
+        </div>
+
+        <!-- Part 2: The 6 Phases of the Intelligence Explosion & Technological Singularity -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6 shadow-sm flex flex-col gap-4">
+          <div class="border-b border-[var(--border)] pb-3">
+            <h3 class="text-lg font-bold text-[var(--foreground)]">2. The 6 Phases of AI &amp; The Technological Singularity (Mapped Across Stages I–VII)</h3>
+            <p class="text-xs text-[var(--muted-foreground)] mt-0.5">
+              How narrow domain algorithms escalate through human-level AGI and recursive self-improvement into galactic Minds and Dyson-swarm Matrioshka brains.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            ${phasesHtml}
+          </div>
+        </div>
+
+        <!-- Part 3: Tegmark's 12 Post-Singularity Aftermath Scenarios (Chapter 5) -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6 shadow-sm flex flex-col gap-4">
+          <div class="border-b border-[var(--border)] pb-3 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-lg font-bold text-[var(--foreground)]">3. Max Tegmark's 12 Post-Singularity Aftermath Scenarios (Chapter 5: "The Next 10,000 Years")</h3>
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5">
+                Every scenario node, book, and film in our Atlas maps directly onto one of Tegmark's 12 canonical post-Singularity futures. Click any node badge to inspect it in the Graph.
+              </p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            ${aftermathHtml}
+          </div>
+        </div>
+      `;
+    }
+
     // ============================================================================
     // 6. FILTER, THEME & NAVIGATION CONTROLLERS
     // ============================================================================
@@ -9081,24 +9842,22 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
     function switchMainView(view) {
       state.mainView = view;
-      ["graph", "characters", "flowguide", "timeline", "catalog", "hosting"].forEach(v => {
+      ["graph", "life30", "characters", "flowguide", "timeline", "catalog", "hosting"].forEach(v => {
         const sec = document.getElementById(`view-${v}`);
         const btn = document.getElementById(`tab-${v}`);
         if (!sec || !btn) return;
-        // Same size in both states so the tab bar never jumps; active tab follows the theme accent
         if (v === view) {
           sec.classList.remove("hidden");
           sec.classList.add("flex");
           btn.className = "px-2.5 py-1 rounded-md text-xs font-bold transition accent-btn shadow-sm";
-          btn.setAttribute("aria-current", "page");
         } else {
           sec.classList.add("hidden");
           sec.classList.remove("flex");
           btn.className = "px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]";
-          btn.removeAttribute("aria-current");
         }
       });
       if (view === "graph") resizeCanvas();
+      if (view === "life30") renderLife30View();
       if (view === "characters") renderCharactersView();
       if (view === "timeline") renderTimelineView();
       if (view === "catalog") renderCatalog();
@@ -9234,15 +9993,12 @@ npx firebase-tools@latest deploy --only hosting</pre>
       const savedTheme = document.documentElement.dataset.robotTheme || "obsidian_slate";
       const sel = document.getElementById("robot-theme-select");
       if (sel) sel.value = savedTheme;
-      if (window.matchMedia("(max-width: 767px)").matches) {
-        document.getElementById("filter-details")?.removeAttribute("open");
-      }
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches && state.particlesOn) toggleParticles();
       resizeCanvas();
       initParticles();
       renderStageStepper();
       renderWorksStrip();
       renderInspector();
+      renderLife30View();
       requestAnimationFrame(drawGraph);
     });
   </script>
