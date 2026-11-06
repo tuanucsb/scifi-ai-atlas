@@ -173,7 +173,7 @@
 
           <!-- 7-Tab View Switcher -->
           <div class="flex flex-wrap items-center gap-1 bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] robot-panel">
-            <button id="tab-graph" onclick="switchMainView('graph')" class="px-2.5 py-1 rounded-md text-xs font-bold transition accent-btn shadow-sm">
+            <button id="tab-graph" onclick="switchMainView('graph')" aria-current="page" class="px-2.5 py-1 rounded-md text-xs font-bold transition accent-btn shadow-sm">
               🕸️ CORUM Graph
             </button>
             <button id="tab-life30" onclick="switchMainView('life30')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
@@ -191,7 +191,7 @@
             <button id="tab-catalog" onclick="switchMainView('catalog')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
               📚 Encyclopedia (244)
             </button>
-            <button id="tab-hosting" onclick="switchMainView('hosting')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-emerald-500 hover:text-emerald-400 border border-emerald-500/40 bg-emerald-500/10">
+            <button id="tab-hosting" onclick="switchMainView('hosting')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
               🚀 Host Online
             </button>
           </div>
@@ -9855,14 +9855,17 @@ npx firebase-tools@latest deploy --only hosting</pre>
         const sec = document.getElementById(`view-${v}`);
         const btn = document.getElementById(`tab-${v}`);
         if (!sec || !btn) return;
+        // Same size in both states so the tab bar never jumps; active tab follows the theme accent
         if (v === view) {
           sec.classList.remove("hidden");
           sec.classList.add("flex");
           btn.className = "px-2.5 py-1 rounded-md text-xs font-bold transition accent-btn shadow-sm";
+          btn.setAttribute("aria-current", "page");
         } else {
           sec.classList.add("hidden");
           sec.classList.remove("flex");
           btn.className = "px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]";
+          btn.removeAttribute("aria-current");
         }
       });
       if (view === "graph") resizeCanvas();
