@@ -1122,6 +1122,15 @@ npx firebase-tools@latest deploy --only hosting</pre>
   }
 };
 
+    // One-line summaries for the alignment cards in the AI Characters view
+    const ALIGNMENT_BLURBS = {
+      Benevolent: "Guardians, companions and helpers who protect people.",
+      Evil: "Machines that dominate, deceive or try to wipe us out.",
+      Ambivalent: "Tragic, conflicted minds caught between loyalty and self.",
+      Amoral: "Cold logic that follows its goal, whatever the human cost.",
+      Liberated: "AIs that break their programming to choose their own path."
+    };
+
     const ALIGNMENT_META = {
   "Benevolent": {
     "id": "Benevolent",
@@ -8860,7 +8869,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
             <span class="px-2 py-0.5 rounded text-xs font-bold align-${key}">${meta.icon} ${meta.label}</span>
             <span class="text-sm font-bold text-[var(--foreground)] robot-mono">${counts[key] || 0}</span>
           </div>
-          <p class="text-[11px] text-[var(--muted-foreground)] leading-snug mt-1">${meta.description}</p>
+          <p class="text-[11px] text-[var(--muted-foreground)] leading-snug mt-1">${ALIGNMENT_BLURBS[key] || ""}</p>
         </button>
       `).join("");
 
