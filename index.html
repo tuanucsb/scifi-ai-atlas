@@ -126,6 +126,17 @@
     .tool-btn { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); font-size: 12.5px; font-weight: 500; color: var(--foreground); white-space: nowrap; }
     .tool-btn:hover { border-color: var(--accent); }
     summary.tool-btn::-webkit-details-marker { display: none; }
+    @media (max-width: 767px) {
+      nav[aria-label="Views"] { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: var(--card); border-top: 1px solid var(--border); padding: 4px 6px calc(4px + env(safe-area-inset-bottom)); }
+      nav[aria-label="Views"] [role="tablist"] { justify-content: space-between; }
+      nav[aria-label="Views"] .tab-btn { flex: 1; min-height: 48px; padding: 4px 2px; font-size: 12.5px; text-align: center; }
+      nav[aria-label="Views"] .tab-btn[aria-selected="true"] { box-shadow: inset 0 2px 0 var(--accent); }
+      body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+      #filter-details[open] > .filter-sheet { position: fixed; left: 0; right: 0; bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 45; max-height: 70dvh; overflow-y: auto; padding: 16px; background: var(--card); border-top: 1px solid var(--border); border-radius: 16px 16px 0 0; box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.35); }
+    }
+    #graph-col.graph-fullscreen { position: fixed; inset: 0; z-index: 60; border-radius: 0; }
+    #graph-col.graph-fullscreen #canvas-container { height: calc(100dvh - 56px); }
+    #graph-col.graph-fullscreen .graph-legend { display: flex; }
     .adot { display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background: currentColor; flex-shrink: 0; }
     .custom-scroll::-webkit-scrollbar { width: 7px; height: 7px; }
     .custom-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -224,10 +235,10 @@
         <div role="tablist" class="flex items-center gap-1">
           <button id="tab-graph" onclick="switchMainView('graph')" aria-selected="true" class="tab-btn" role="tab">Graph</button>
           <button id="tab-life30" onclick="switchMainView('life30')" aria-selected="false" class="tab-btn" role="tab">Life 3.0</button>
-          <button id="tab-characters" onclick="switchMainView('characters')" aria-selected="false" class="tab-btn" role="tab">Characters</button>
+          <button id="tab-characters" onclick="switchMainView('characters')" aria-selected="false" class="tab-btn" role="tab"><span class="md:hidden">Minds</span><span class="hidden md:inline">Characters</span></button>
           <button id="tab-flowguide" onclick="switchMainView('flowguide')" aria-selected="false" class="tab-btn" role="tab">Sagas</button>
           <button id="tab-timeline" onclick="switchMainView('timeline')" aria-selected="false" class="tab-btn" role="tab">Timeline</button>
-          <button id="tab-catalog" onclick="switchMainView('catalog')" aria-selected="false" class="tab-btn" role="tab">Encyclopedia</button>
+          <button id="tab-catalog" onclick="switchMainView('catalog')" aria-selected="false" class="tab-btn" role="tab"><span class="md:hidden">Works</span><span class="hidden md:inline">Encyclopedia</span></button>
         </div>
       </nav>
 
@@ -239,7 +250,7 @@
             type="search"
             oninput="handleSearch(this.value)"
             placeholder="Search HAL, Solaris, Lem…  ( / )"
-            class="w-48 sm:w-64 pl-3 pr-7 py-1.5 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] placeholder-[var(--muted-foreground)] focus:outline-none focus:border-accent"
+            class="w-40 sm:w-64 pl-3 pr-7 py-1.5 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] placeholder-[var(--muted-foreground)] focus:outline-none focus:border-accent"
           />
           <button id="clear-search" onclick="clearSearch()" aria-label="Clear search" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
         </div>
@@ -258,7 +269,11 @@
   <div class="filter-bar bg-[var(--card)] border-b border-[var(--border)] robot-panel px-4 py-2">
     <details id="filter-details" open class="max-w-[1780px] mx-auto">
     <summary class="md:hidden cursor-pointer py-1.5 text-xs font-semibold text-[var(--foreground)]">Filters</summary>
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 md:pt-0">
+    <div class="filter-sheet flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 md:pt-0">
+      <div class="md:hidden w-full flex items-center justify-between">
+        <span class="text-sm font-semibold text-[var(--foreground)]">Filters</span>
+        <button onclick="document.getElementById('filter-details').open = false" class="px-3 py-1.5 rounded-lg accent-btn text-xs font-semibold">Done</button>
+      </div>
       <label class="flex items-center gap-2 text-xs font-semibold text-[var(--muted-foreground)]">Saga
         <select id="saga-select" onchange="setPathway(this.value)" class="max-w-[16rem] bg-[var(--background)] border border-[var(--border)] rounded-lg px-2 py-1 text-xs font-medium text-[var(--foreground)]"></select>
       </label>
@@ -289,6 +304,8 @@
     </div>
     </details>
   </div>
+
+  <div id="sr-status" class="sr-only" aria-live="polite"></div>
 
   <!-- Main Workspace Container -->
   <main class="flex-1 max-w-[1780px] w-full mx-auto p-4 flex flex-col gap-4">
@@ -321,7 +338,7 @@
           <div class="px-3 py-2 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 bg-[var(--surface)]">
             <div class="flex flex-col min-w-0">
               <span class="text-xs font-semibold text-[var(--foreground)]">27 scenarios · 244 works · 113 AI minds</span>
-              <span class="text-xs text-[var(--muted-foreground)]">Click a hub to inspect · drag to pan · Ctrl/⌘ + scroll to zoom</span>
+              <span class="hidden md:block text-xs text-[var(--muted-foreground)]">Click a hub to inspect · drag to pan · Ctrl/⌘ + scroll to zoom</span>
             </div>
             <div class="flex items-center gap-1">
               <button onclick="stepNode(-1)" class="tool-btn" aria-label="Previous scenario">◀ Prev</button>
@@ -353,8 +370,11 @@
             </div>
           </div>
 
-          <div class="relative w-full h-[440px] sm:h-[680px] bg-[var(--background)]" id="canvas-container">
-            <canvas id="network-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+          <div class="relative w-full h-[240px] md:h-[440px] lg:h-[680px] bg-[var(--background)]" id="canvas-container">
+            <canvas id="network-canvas" tabindex="0" role="application"
+              aria-label="Scenario graph. Left and right arrows move between stages, up and down within a stage, Enter opens the details, Escape fits the graph."
+              class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+            <button id="graph-expand" onclick="toggleGraphFullscreen()" class="md:hidden absolute top-2 right-2 z-10 tool-btn" aria-label="Expand the graph to full screen">Expand</button>
 
             <div id="graph-empty" class="hidden absolute inset-0 z-10 flex items-center justify-center p-4"></div>
 
@@ -367,8 +387,8 @@
               <!-- Populated dynamically on hover -->
             </div>
 
-            <!-- Floating Legend Bottom-Left -->
-            <div class="absolute bottom-2.5 left-2.5 bg-[var(--card)]/95 backdrop-blur border border-[var(--border)] robot-panel rounded-lg px-2.5 py-1.5 shadow-md flex flex-wrap items-center gap-2 text-xs pointer-events-none max-w-[96%]">
+            <!-- Floating Legend Bottom-Left (hidden on the phone mini-map; shown full screen) -->
+            <div class="graph-legend hidden md:flex absolute bottom-2.5 left-2.5 bg-[var(--card)]/95 backdrop-blur border border-[var(--border)] robot-panel rounded-lg px-2.5 py-1.5 shadow-md flex-wrap items-center gap-2 text-xs pointer-events-none max-w-[96%]">
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span><span>Utopian</span></div>
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span><span>Companion</span></div>
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span><span>Positronic</span></div>
@@ -8593,12 +8613,14 @@ npx firebase-tools@latest deploy --only hosting</pre>
         ctx.font = "600 12px 'IBM Plex Mono', monospace";
         ctx.textAlign = "center";
         ctx.fillStyle = isCurrentStage ? `rgb(${accentFgRgb})` : textMuted;
-        ctx.fillText(st.roman.toUpperCase(), colX, 18);
+        // Full "STAGE IV" when it fits between columns, otherwise just the numeral
+        const colGap = (usableW / 6) * state.camera.zoom - 8;
+        const romanFull = st.roman.toUpperCase();
+        ctx.fillText(ctx.measureText(romanFull).width <= colGap ? romanFull : romanFull.replace(/^STAGE\s*/, ""), colX, 18);
         ctx.font = "500 11px 'IBM Plex Sans', sans-serif";
         ctx.fillStyle = isCurrentStage ? textMain : textMuted;
         // Stage name only when it fits between columns (the current stage always shows it)
-        const colGap = (usableW / 6) * state.camera.zoom - 8;
-        if (isCurrentStage || ctx.measureText(st.shortLabel).width <= colGap) ctx.fillText(st.shortLabel, colX, 32);
+        if (ctx.measureText(st.shortLabel).width <= colGap * (isCurrentStage ? 1.6 : 1)) ctx.fillText(st.shortLabel, colX, 32);
       });
 
       // Horizontal Equator Line (Neutral Valence = 0)
@@ -9236,7 +9258,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
       const xs = NODES.map(n => n.x), ys = NODES.map(n => n.y);
       const minX = Math.min(...xs) - 80, maxX = Math.max(...xs) + 80;
       const minY = Math.min(...ys) - 50, maxY = Math.max(...ys) + 60;
-      const zoom = Math.max(0.5, Math.min(1.2, width / (maxX - minX), (height - RULER_H) / (maxY - minY)));
+      const zoom = Math.max(0.3, Math.min(1.2, width / (maxX - minX), (height - RULER_H) / (maxY - minY)));
       state.camera.zoom = zoom;
       state.camera.x = (width - (maxX - minX) * zoom) / 2 - minX * zoom;
       state.camera.y = RULER_H + ((height - RULER_H) - (maxY - minY) * zoom) / 2 - minY * zoom;
@@ -9261,6 +9283,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
       renderWorksStrip();
       renderInspector();
       syncHash(true);
+      announceSelection();
     }
 
     function selectWorkSatellite(nodeId, workTitle) {
@@ -10069,6 +10092,56 @@ npx firebase-tools@latest deploy --only hosting</pre>
       resizeCanvas();
       resetCamera();
     });
+
+    function toggleGraphFullscreen() {
+      const col = document.getElementById("graph-col");
+      const on = col.classList.toggle("graph-fullscreen");
+      const btn = document.getElementById("graph-expand");
+      btn.textContent = on ? "Close" : "Expand";
+      btn.setAttribute("aria-label", on ? "Close the full-screen graph" : "Expand the graph to full screen");
+      document.body.style.overflow = on ? "hidden" : "";
+      requestAnimationFrame(() => { resizeCanvas(); fitGraph(); });
+    }
+
+    // Keyboard: ←/→ jump to the nearest hub in the previous/next stage, ↑/↓ move within the stage
+    canvas.addEventListener("keydown", (e) => {
+      const cur = NODES.find(n => n.id === state.selectedNodeId) || NODES[0];
+      const pool = NODES.filter(n => isNodeHighlighted(n));
+      const list = pool.length ? pool : NODES;
+      let next = null;
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        const dir = e.key === "ArrowRight" ? 1 : -1;
+        for (let st = cur.stage + dir; st >= 1 && st <= 7 && !next; st += dir) {
+          const inStage = list.filter(n => n.stage === st);
+          if (inStage.length) next = inStage.reduce((a, b) => Math.abs(a.y - cur.y) <= Math.abs(b.y - cur.y) ? a : b);
+        }
+      } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        const inStage = list.filter(n => n.stage === cur.stage).sort((a, b) => a.y - b.y);
+        const i = inStage.findIndex(n => n.id === cur.id);
+        next = inStage[i + (e.key === "ArrowDown" ? 1 : -1)] || null;
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        const heading = document.querySelector("#inspector-content h2");
+        if (heading) { heading.setAttribute("tabindex", "-1"); heading.focus(); }
+        return;
+      } else if (e.key === "Escape") {
+        if (document.getElementById("graph-col").classList.contains("graph-fullscreen")) toggleGraphFullscreen();
+        else resetCamera();
+        return;
+      } else {
+        return;
+      }
+      e.preventDefault();
+      if (next) selectNode(next.id);
+    });
+
+    function announceSelection() {
+      const node = NODES.find(n => n.id === state.selectedNodeId);
+      const el = document.getElementById("sr-status");
+      if (!node || !el) return;
+      const stage = STAGES.find(st => st.id === node.stage);
+      el.textContent = `Selected: ${node.title}, ${stage ? stage.roman : "stage " + node.stage}, ${(node.aiPersonalities || []).length} AI characters.`;
+    }
 
     // Short saga names for the filter dropdown (PATHWAYS names are long descriptions)
     const SAGA_SHORT = {
