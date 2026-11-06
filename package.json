@@ -1,0 +1,9 @@
+{
+  "name": "scifi-ai-atlas",
+  "private": true,
+  "description": "Single-file interactive atlas of AI in science fiction",
+  "scripts": {
+    "build:css": "node scripts/build-css.js",
+    "check:contrast": "node scripts/contrast-check.js"
+  }
+}
