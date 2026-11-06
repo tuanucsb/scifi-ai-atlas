@@ -104,6 +104,17 @@
     body { font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; }
     h2, h3 { font-family: "IBM Plex Serif", ui-serif, Georgia, serif; font-weight: 600; letter-spacing: -0.005em; }
     .num { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+    .tab-btn { padding: 6px 10px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; transition: color .15s, background-color .15s; }
+    .tab-btn:hover { color: var(--foreground); background: var(--surface); }
+    .tab-btn[aria-selected="true"] { color: var(--foreground); background: var(--surface); box-shadow: inset 0 -2px 0 var(--accent); font-weight: 600; }
+    .seg { display: inline-flex; gap: 2px; padding: 2px; background: var(--background); border: 1px solid var(--border); border-radius: 8px; }
+    .seg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12.5px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; transition: color .15s, background-color .15s; }
+    .seg-btn:hover { color: var(--foreground); }
+    .seg-btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-contrast); font-weight: 600; }
+    .seg-solo { border: 1px solid var(--border); background: var(--background); }
+    .tool-btn { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); font-size: 12.5px; font-weight: 500; color: var(--foreground); white-space: nowrap; }
+    .tool-btn:hover { border-color: var(--accent); }
+    summary.tool-btn::-webkit-details-marker { display: none; }
     .adot { display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background: currentColor; flex-shrink: 0; }
     .custom-scroll::-webkit-scrollbar { width: 7px; height: 7px; }
     .custom-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -172,7 +183,7 @@
     :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
     /* Finger-sized filter chips on touch screens */
     @media (pointer: coarse) {
-      .filter-bar button, .filter-bar input, header button { min-height: 40px; }
+      .filter-bar button, .filter-bar select, header button, header input, header select, .tool-btn { min-height: 44px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -190,168 +201,80 @@
 </head>
 <body class="bg-[var(--background)] text-[var(--foreground)] antialiased min-h-screen flex flex-col">
 
-  <!-- Top Header & High-Contrast CORUM Navigation Controls -->
-  <header class="bg-[var(--card)] border-b border-[var(--border)] robot-panel px-4 py-2.5 md:sticky md:top-0 z-30 shadow-md">
-    <div class="max-w-[1780px] mx-auto flex flex-col gap-2">
-      <div class="flex flex-wrap items-center justify-between gap-2.5">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="inline-flex shrink-0 items-center justify-center w-7 h-7 rounded-md accent-btn font-bold text-xs shadow-sm">AI</span>
-            <div>
-              <div class="flex items-center gap-2">
-                <h1 class="text-base sm:text-lg font-bold tracking-tight text-[var(--foreground)]">
-                  The Sci-Fi AI Evolution Atlas: Life 3.0, Singularity &amp; CORUM Network
-                </h1>
-                <span class="hidden sm:inline-block px-2 py-0.5 rounded text-xs font-bold accent-pill">27 scenarios · 244 works · 113 AI minds</span>
-              </div>
-              <p class="hidden sm:block text-sm text-[var(--muted-foreground)]">
-                Maps Max Tegmark's <strong>Life 3.0 &amp; 12 Singularity Scenarios</strong> • Click any node for <strong>Movie &amp; Book Satellites</strong> • Includes <strong>Prometheus</strong>, <strong>Marvin (42)</strong>, <strong>Data</strong>, <strong>HAL</strong>, <strong>Matrix</strong> &amp; <strong>Three-Body</strong>
-              </p>
-            </div>
-          </div>
-        </div>
+  <!-- Sticky bar: product name, views, search, theme -->
+  <header class="bg-[var(--card)] border-b border-[var(--border)] robot-panel px-4 py-2 md:sticky md:top-0 z-30">
+    <div class="max-w-[1780px] mx-auto flex flex-wrap items-center gap-x-5 gap-y-2">
+      <a href="#graph" onclick="switchMainView('graph'); return false;" class="flex items-center gap-2 shrink-0 no-underline">
+        <span class="inline-flex shrink-0 items-center justify-center w-7 h-7 rounded-md accent-btn font-bold text-xs">AI</span>
+        <h1 class="text-lg font-bold tracking-tight text-[var(--foreground)]">Sci-Fi AI Atlas</h1>
+      </a>
 
-        <div class="flex flex-wrap items-center gap-2">
-          <!-- High-Contrast Theme Selector (Default Obsidian Slate + CORUM Daylight) -->
-          <div class="flex items-center gap-1.5 bg-[var(--background)] px-2.5 py-1 rounded-lg border border-[var(--border)] robot-panel">
-            <span class="text-xs font-bold text-[var(--foreground)]">THEME:</span>
-            <select id="robot-theme-select" aria-label="Color Scheme" onchange="applyRobotTheme(this.value)" class="bg-transparent text-xs font-bold text-[var(--foreground)] focus:outline-none cursor-pointer">
-              <option value="obsidian_slate">Obsidian Slate &amp; Crisp White (Dark)</option>
-              <option value="corum_light">CORUM Editorial Daylight (Light)</option>
-              <option value="hal9000">HAL-9000 Optical (Carbon &amp; Crimson)</option>
-              <option value="nostromo">Mother / Nostromo (Warm Amber)</option>
-            </select>
-          </div>
-
-          <!-- 7-Tab View Switcher -->
-          <div class="flex flex-wrap items-center gap-1 bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] robot-panel">
-            <button id="tab-graph" onclick="switchMainView('graph')" aria-current="page" class="px-2.5 py-1 rounded-md text-xs font-bold transition accent-btn shadow-sm">
-              CORUM Graph
-            </button>
-            <button id="tab-life30" onclick="switchMainView('life30')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
-              Life 3.0 &amp; Singularity
-            </button>
-            <button id="tab-characters" onclick="switchMainView('characters')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
-              AI Characters (113)
-            </button>
-            <button id="tab-flowguide" onclick="switchMainView('flowguide')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
-              Sagas &amp; Flow Guide
-            </button>
-            <button id="tab-timeline" onclick="switchMainView('timeline')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
-              7-Stage Matrix
-            </button>
-            <button id="tab-catalog" onclick="switchMainView('catalog')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
-              Encyclopedia (244)
-            </button>
-            <button id="tab-hosting" onclick="switchMainView('hosting')" class="px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
-              Host Online
-            </button>
-          </div>
+      <nav aria-label="Views" class="order-3 w-full lg:order-none lg:w-auto overflow-x-auto">
+        <div role="tablist" class="flex items-center gap-1">
+          <button id="tab-graph" onclick="switchMainView('graph')" aria-selected="true" class="tab-btn" role="tab">Graph</button>
+          <button id="tab-life30" onclick="switchMainView('life30')" aria-selected="false" class="tab-btn" role="tab">Life 3.0</button>
+          <button id="tab-characters" onclick="switchMainView('characters')" aria-selected="false" class="tab-btn" role="tab">Characters</button>
+          <button id="tab-flowguide" onclick="switchMainView('flowguide')" aria-selected="false" class="tab-btn" role="tab">Sagas</button>
+          <button id="tab-timeline" onclick="switchMainView('timeline')" aria-selected="false" class="tab-btn" role="tab">Timeline</button>
+          <button id="tab-catalog" onclick="switchMainView('catalog')" aria-selected="false" class="tab-btn" role="tab">Encyclopedia</button>
         </div>
+      </nav>
+
+      <div class="ml-auto flex items-center gap-2">
+        <div class="relative">
+          <label for="search-input" class="sr-only">Search characters, works and authors</label>
+          <input
+            id="search-input"
+            type="search"
+            oninput="handleSearch(this.value)"
+            placeholder="Search HAL, Solaris, Lem…  ( / )"
+            class="w-48 sm:w-64 pl-3 pr-7 py-1.5 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] placeholder-[var(--muted-foreground)] focus:outline-none focus:border-accent"
+          />
+          <button id="clear-search" onclick="clearSearch()" aria-label="Clear search" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
+        </div>
+        <label for="robot-theme-select" class="sr-only">Color theme</label>
+        <select id="robot-theme-select" onchange="applyRobotTheme(this.value)" class="bg-[var(--background)] border border-[var(--border)] rounded-lg px-2 py-1.5 text-xs font-medium text-[var(--foreground)] cursor-pointer">
+          <option value="obsidian_slate">Obsidian (dark)</option>
+          <option value="corum_light">Daylight (light)</option>
+          <option value="hal9000">HAL 9000</option>
+          <option value="nostromo">Nostromo</option>
+        </select>
       </div>
     </div>
   </header>
 
-  <!-- Filter rows scroll away with the page so the sticky bar above stays one row tall -->
+  <!-- One filter row; scrolls away with the page. Collapsed by default on phones (see DOMContentLoaded) -->
   <div class="filter-bar bg-[var(--card)] border-b border-[var(--border)] robot-panel px-4 py-2">
-    <!-- Collapsed by default on phones (see DOMContentLoaded) so the graph isn't a full screen away -->
     <details id="filter-details" open class="max-w-[1780px] mx-auto">
-    <summary class="md:hidden cursor-pointer py-1.5 text-xs font-bold text-[var(--foreground)]">Filters &amp; search</summary>
-    <div class="flex flex-col gap-2 pt-1 md:pt-0">
-      <!-- Row 2: Saga Trackers & Life 3.0 -->
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div class="flex flex-wrap items-center gap-1">
-          <span class="text-xs font-bold text-[var(--foreground)] mr-1">Sagas</span>
-          <button onclick="setPathway('all')" id="path-all" class="path-btn px-2 py-0.5 rounded text-xs font-bold accent-btn transition">
-            All 27 Nodes
-          </button>
-          <button onclick="setPathway('life30_saga')" id="path-life30_saga" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            Life 3.0 &amp; Singularity (Tegmark)
-          </button>
-          <button onclick="setPathway('hitchhiker_saga')" id="path-hitchhiker_saga" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            Hitchhiker's Guide (Marvin &amp; 42)
-          </button>
-          <button onclick="setPathway('threebody_saga')" id="path-threebody_saga" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            Three-Body Problem
-          </button>
-          <button onclick="setPathway('westworld_saga')" id="path-westworld_saga" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            Westworld
-          </button>
-          <button onclick="setPathway('matrix_saga')" id="path-matrix_saga" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            The Matrix
-          </button>
-          <button onclick="setPathway('data_saga')" id="path-data_saga" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            Star Trek: Data
-          </button>
-          <button onclick="setPathway('her_nearfuture')" id="path-her_nearfuture" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            'Her' &amp; Near-Future
-          </button>
-          <button onclick="setPathway('asimov')" id="path-asimov" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            Asimov Robot→Foundation
-          </button>
-          <button onclick="setPathway('odyssey')" id="path-odyssey" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            2001: HAL 9000
-          </button>
-          <button onclick="setPathway('bladerunner')" id="path-bladerunner" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            Blade Runner
-          </button>
-          <button onclick="setPathway('extinction')" id="path-extinction" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            Terminator / Skynet
-          </button>
-          <button onclick="setPathway('utopia')" id="path-utopia" class="path-btn px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] hover:border-accent text-[var(--foreground)] transition">
-            The Culture
-          </button>
+    <summary class="md:hidden cursor-pointer py-1.5 text-xs font-semibold text-[var(--foreground)]">Filters</summary>
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 md:pt-0">
+      <label class="flex items-center gap-2 text-xs font-semibold text-[var(--muted-foreground)]">Saga
+        <select id="saga-select" onchange="setPathway(this.value)" class="max-w-[16rem] bg-[var(--background)] border border-[var(--border)] rounded-lg px-2 py-1 text-xs font-medium text-[var(--foreground)]"></select>
+      </label>
+
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-semibold text-[var(--muted-foreground)]" id="align-label">Alignment</span>
+        <div class="seg flex-wrap" role="group" aria-labelledby="align-label">
+          <button onclick="setAlignmentFilter('all')" id="align-all" class="align-btn seg-btn" aria-pressed="true">All</button>
+          <button onclick="setAlignmentFilter('Benevolent')" id="align-Benevolent" class="align-btn seg-btn" aria-pressed="false"><span class="adot" style="color:#10b981"></span>Benevolent</button>
+          <button onclick="setAlignmentFilter('Evil')" id="align-Evil" class="align-btn seg-btn" aria-pressed="false"><span class="adot" style="color:#ef4444"></span>Hostile</button>
+          <button onclick="setAlignmentFilter('Ambivalent')" id="align-Ambivalent" class="align-btn seg-btn" aria-pressed="false"><span class="adot" style="color:#a855f7"></span>Ambivalent</button>
+          <button onclick="setAlignmentFilter('Amoral')" id="align-Amoral" class="align-btn seg-btn" aria-pressed="false"><span class="adot" style="color:#3b82f6"></span>Amoral</button>
+          <button onclick="setAlignmentFilter('Liberated')" id="align-Liberated" class="align-btn seg-btn" aria-pressed="false"><span class="adot" style="color:#f59e0b"></span>Liberated</button>
         </div>
       </div>
 
-      <!-- Row 3: AI Moral Alignment Filter + Media Filter + Search -->
-      <div class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-[var(--border)]">
-        <div class="flex flex-wrap items-center gap-1">
-          <span class="text-xs font-bold text-[var(--foreground)] mr-1">Alignment</span>
-          <button onclick="setAlignmentFilter('all')" id="align-all" class="align-btn px-2 py-0.5 rounded text-xs font-bold accent-btn transition">
-            All (112)
-          </button>
-          <button onclick="setAlignmentFilter('Benevolent')" id="align-Benevolent" class="align-btn px-2 py-0.5 rounded text-xs font-semibold align-Benevolent transition">
-            Benevolent
-          </button>
-          <button onclick="setAlignmentFilter('Evil')" id="align-Evil" class="align-btn px-2 py-0.5 rounded text-xs font-semibold align-Evil transition">
-            Evil / Hostile
-          </button>
-          <button onclick="setAlignmentFilter('Ambivalent')" id="align-Ambivalent" class="align-btn px-2 py-0.5 rounded text-xs font-semibold align-Ambivalent transition">
-            Ambivalent (Marvin, HAL, Roy)
-          </button>
-          <button onclick="setAlignmentFilter('Amoral')" id="align-Amoral" class="align-btn px-2 py-0.5 rounded text-xs font-semibold align-Amoral transition">
-            Amoral / Logical (Deep Thought)
-          </button>
-          <button onclick="setAlignmentFilter('Liberated')" id="align-Liberated" class="align-btn px-2 py-0.5 rounded text-xs font-semibold align-Liberated transition">
-            Liberated (Murderbot, Samantha)
-          </button>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-1.5">
-          <button onclick="toggleAwardsOnly()" id="btn-awards" class="px-2 py-0.5 rounded text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">
-            Awards: OFF
-          </button>
-
-          <div class="flex items-center bg-[var(--background)] border border-[var(--border)] rounded-lg p-0.5">
-            <button onclick="setMediumFilter('all')" id="med-all" class="med-btn px-2 py-0.5 rounded text-xs font-bold accent-btn">All (241)</button>
-            <button onclick="setMediumFilter('Book')" id="med-Book" class="med-btn px-2 py-0.5 rounded text-xs font-semibold text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Books</button>
-            <button onclick="setMediumFilter('Movie')" id="med-Movie" class="med-btn px-2 py-0.5 rounded text-xs font-semibold text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Movies</button>
-            <button onclick="setMediumFilter('TV')" id="med-TV" class="med-btn px-2 py-0.5 rounded text-xs font-semibold text-[var(--muted-foreground)] hover:text-[var(--foreground)]">TV</button>
-          </div>
-
-          <div class="relative">
-            <input
-              id="search-input"
-              type="text"
-              oninput="handleSearch(this.value)"
-              placeholder="Search Marvin, Deep Thought, Data, HAL, author..."
-              class="w-60 pl-2.5 pr-6 py-1 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] placeholder-[var(--muted-foreground)] focus:outline-none focus:border-accent"
-            />
-            <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
-          </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-semibold text-[var(--muted-foreground)]" id="media-label">Media</span>
+        <div class="seg" role="group" aria-labelledby="media-label">
+          <button onclick="setMediumFilter('all')" id="med-all" class="med-btn seg-btn" aria-pressed="true">All</button>
+          <button onclick="setMediumFilter('Book')" id="med-Book" class="med-btn seg-btn" aria-pressed="false">Books</button>
+          <button onclick="setMediumFilter('Movie')" id="med-Movie" class="med-btn seg-btn" aria-pressed="false">Films</button>
+          <button onclick="setMediumFilter('TV')" id="med-TV" class="med-btn seg-btn" aria-pressed="false">TV</button>
         </div>
       </div>
+
+      <button onclick="toggleAwardsOnly()" id="btn-awards" class="seg-btn seg-solo" aria-pressed="false">Award winners</button>
     </div>
     </details>
   </div>
@@ -360,84 +283,62 @@
   <main class="flex-1 max-w-[1780px] w-full mx-auto p-4 flex flex-col gap-4">
 
     <!-- Active Saga Banner -->
-    <div id="pathway-banner" class="hidden bg-[var(--card)] border-2 border-accent rounded-xl px-4 py-2.5 items-center justify-between gap-3 shadow-sm">
-      <div class="text-xs sm:text-sm leading-relaxed">
-        <span class="font-bold text-[var(--foreground)] underline decoration-accent decoration-2" id="pathway-banner-title"></span>
+    <div id="pathway-banner" class="hidden bg-[var(--card)] border border-accent rounded-xl px-4 py-2.5 items-center justify-between gap-3">
+      <div class="text-sm leading-relaxed">
+        <span class="font-semibold text-[var(--foreground)]" id="pathway-banner-title"></span>
         <span class="text-[var(--muted-foreground)] ml-1.5" id="pathway-banner-desc"></span>
       </div>
-      <button onclick="setPathway('all')" class="px-3 py-1 rounded-lg accent-btn text-xs font-bold shrink-0">
-        Show All 27 Scenarios
+      <button onclick="setPathway('all')" class="px-3 py-1 rounded-lg accent-btn text-xs font-semibold shrink-0">
+        Show all 27 scenarios
       </button>
     </div>
 
     <!-- ===================================================================== -->
-    <!-- VIEW 1: CORUM-STYLE INTERACTIVE POSTER GRAPH + INSPECTOR              -->
+    <!-- VIEW 1: GRAPH + INSPECTOR                                             -->
     <!-- ===================================================================== -->
     <section id="view-graph" class="flex flex-col gap-3">
 
-      <!-- Interactive 7-Stage Flow Stepper Bar -->
-      <div class="bg-[var(--card)] border border-[var(--border)] robot-panel rounded-xl p-2.5 shadow-sm flex flex-col gap-2">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div class="flex flex-wrap items-center gap-2 text-xs">
-            <span class="px-2 py-0.5 rounded font-bold accent-pill">Evolution network</span>
-            <span class="text-[var(--foreground)] font-medium">Click any Scenario Hub to highlight <strong>← Upstream &amp; Downstream → Nodes</strong> and fan out compact <strong>Movie &amp; Book Satellites</strong></span>
-          </div>
-          <div class="flex flex-wrap items-center gap-1.5">
-            <span class="text-xs font-semibold text-[var(--muted-foreground)]">Canvas Satellites:</span>
-            <select id="satellite-mode-select" onchange="setSatelliteMode(this.value)" class="w-full sm:w-auto max-w-full bg-[var(--background)] border border-[var(--border)] rounded px-2 py-0.5 text-xs font-bold text-[var(--foreground)]">
-              <option value="selected">Selected Node: Micro-Posters (Clean Radial Ring)</option>
-              <option value="dots">Selected Node: Compact CORUM Dots (Ultra-Minimal)</option>
-              <option value="connected">Selected + Related Nodes (Compact Dots)</option>
-              <option value="none">Hide Canvas Satellites (Use Bottom Strip Only)</option>
-            </select>
-            <button onclick="setGraphLayout('balanced')" id="layout-balanced" class="px-2 py-0.5 rounded text-xs font-bold accent-btn">58% / 42%</button>
-            <button onclick="setGraphLayout('reader')" id="layout-reader" class="px-2 py-0.5 rounded text-xs font-medium bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Reader</button>
-            <button onclick="setGraphLayout('widegraph')" id="layout-widegraph" class="px-2 py-0.5 rounded text-xs font-medium bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Wide Graph</button>
-          </div>
-        </div>
-
-        <!-- 7-Stage Interactive Stepper Pills -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5" id="stage-stepper-bar">
-          <!-- Populated dynamically by JS -->
-        </div>
+      <!-- Stage pills: only below lg, where the canvas stage ruler is too small to tap -->
+      <div class="flex gap-1.5 overflow-x-auto custom-scroll pb-1 lg:hidden" id="stage-stepper-bar">
+        <!-- Populated dynamically by JS -->
       </div>
 
-      <!-- Graph + Book Inspector Split Grid -->
-      <div id="graph-split-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <!-- Graph + Inspector Split Grid -->
+      <div id="graph-split-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
         <!-- Graph Canvas Column -->
-        <div id="graph-col" class="lg:col-span-7 bg-[var(--card)] border border-[var(--border)] robot-panel rounded-xl overflow-hidden shadow-sm flex flex-col">
-          <div class="px-3.5 py-2 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 bg-[var(--surface)]">
-            <div class="flex flex-wrap items-center gap-2 text-xs">
-              <span class="font-bold text-[var(--foreground)]">SCENARIO &amp; WORK GRAPH:</span>
-              <span class="text-[var(--muted-foreground)]">Click any <strong>Hub</strong> or <strong>Satellite</strong> to inspect • Ctrl/⌘ + scroll to zoom, drag to pan</span>
+        <div id="graph-col" class="lg:col-span-7 bg-[var(--card)] border border-[var(--border)] robot-panel rounded-xl overflow-hidden flex flex-col">
+          <div class="px-3 py-2 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 bg-[var(--surface)]">
+            <div class="flex flex-col min-w-0">
+              <span class="text-xs font-semibold text-[var(--foreground)]">27 scenarios · 244 works · 113 AI minds</span>
+              <span class="text-xs text-[var(--muted-foreground)]">Click a hub to inspect · drag to pan · Ctrl/⌘ + scroll to zoom</span>
             </div>
             <div class="flex items-center gap-1">
-              <button onclick="stepNode(-1)" class="px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--card)] hover:border-accent text-xs font-semibold transition">
-                ◀ Prev
-              </button>
-              <button onclick="stepNode(1)" class="px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--card)] hover:border-accent text-xs font-semibold transition">
-                Next ▶
-              </button>
-              <button onclick="centerOnSelectedNode()" class="px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--card)] hover:border-accent text-xs font-semibold transition">
-                Focus Node
-              </button>
-              <button onclick="resetCamera()" class="px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--card)] hover:border-accent text-xs font-semibold transition">
-                Reset View
-              </button>
-              <button onclick="toggleParticles()" id="btn-particles" class="px-2 py-0.5 rounded accent-pill text-xs font-bold transition">
-                Flow: ON
-              </button>
-            </div>
-          </div>
-
-          <!-- Compact Related Movies & Books Strip for the Clicked Scenario Hub -->
-          <div class="px-3 py-2 border-b border-[var(--border)] bg-[var(--background)]/75 flex flex-col gap-1.5">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-bold text-[var(--foreground)]" id="strip-hub-title">Related Movies, Books &amp; TV in Selected Node:</span>
-              <span class="text-[var(--muted-foreground)]">Click any mini-poster to inspect work &amp; AI character</span>
-            </div>
-            <div id="canvas-works-strip" class="flex items-center gap-2 overflow-x-auto custom-scroll pb-1">
-              <!-- Populated dynamically by JS -->
+              <button onclick="stepNode(-1)" class="tool-btn" aria-label="Previous scenario">◀ Prev</button>
+              <button onclick="stepNode(1)" class="tool-btn" aria-label="Next scenario">Next ▶</button>
+              <button onclick="centerOnSelectedNode()" class="tool-btn">Focus</button>
+              <button onclick="resetCamera()" class="tool-btn">Fit</button>
+              <details class="relative" id="view-menu">
+                <summary class="tool-btn list-none cursor-pointer" aria-label="View options">View ▾</summary>
+                <div class="absolute right-0 top-full mt-1 z-30 w-72 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-xl p-3 flex flex-col gap-3">
+                  <label class="flex flex-col gap-1 text-xs font-semibold text-[var(--muted-foreground)]">Posters on the graph
+                    <select id="satellite-mode-select" onchange="setSatelliteMode(this.value)" class="w-full bg-[var(--background)] border border-[var(--border)] rounded-lg px-2 py-1 text-xs font-medium text-[var(--foreground)]">
+                      <option value="selected">Selected scenario: poster ring</option>
+                      <option value="dots">Selected scenario: dots</option>
+                      <option value="connected">Selected + related: dots</option>
+                      <option value="none">Hide posters</option>
+                    </select>
+                  </label>
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-semibold text-[var(--muted-foreground)]" id="layout-label">Layout</span>
+                    <div class="seg" role="group" aria-labelledby="layout-label">
+                      <button onclick="setGraphLayout('balanced')" id="layout-balanced" class="seg-btn" aria-pressed="true">Balanced</button>
+                      <button onclick="setGraphLayout('reader')" id="layout-reader" class="seg-btn" aria-pressed="false">Reader</button>
+                      <button onclick="setGraphLayout('widegraph')" id="layout-widegraph" class="seg-btn" aria-pressed="false">Wide graph</button>
+                    </div>
+                  </div>
+                  <button onclick="toggleParticles()" id="btn-particles" class="seg-btn seg-solo self-start" aria-pressed="true">Edge flow animation</button>
+                </div>
+              </details>
             </div>
           </div>
 
@@ -458,7 +359,7 @@
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span><span>Utopian</span></div>
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span><span>Companion</span></div>
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span><span>Positronic</span></div>
-              <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-accent inline-block"></span><span>Synth Rights</span></div>
+              <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#4f46e5] inline-block"></span><span>Synth Rights</span></div>
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span><span>Post-Human</span></div>
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span><span>Panopticon</span></div>
               <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span><span>Extinction</span></div>
@@ -467,11 +368,11 @@
         </div>
 
         <!-- Inspector & Deep Book/Movie Poster Reader Column -->
-        <div id="inspector-col" class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] robot-panel rounded-xl shadow-sm flex flex-col h-[785px]">
-          <div id="inspector-content" class="flex-1 overflow-y-auto custom-scroll p-4 flex flex-col gap-3.5">
+        <aside id="inspector-col" aria-label="Selected scenario" class="relative lg:col-span-5 bg-[var(--card)] border border-[var(--border)] robot-panel rounded-xl flex flex-col min-h-[420px]">
+          <div id="inspector-content" class="lg:absolute lg:inset-0 overflow-y-auto custom-scroll p-4 flex flex-col gap-3.5">
             <!-- Populated dynamically by JS -->
           </div>
-        </div>
+        </aside>
       </div>
     </section>
 
@@ -8293,97 +8194,97 @@ npx firebase-tools@latest deploy --only hosting</pre>
         color: "#3fb8a9"
       },
       life30_saga: {
-        name: "🧬 Max Tegmark's Life 3.0 & Singularity Trajectory: Boxed Oracles → Breakout ('Prometheus') → 12 Aftermath Scenarios → Cosmic Endowment",
+        name: "Max Tegmark's Life 3.0 & Singularity Trajectory: Boxed Oracles → Breakout ('Prometheus') → 12 Aftermath Scenarios → Cosmic Endowment",
         description: "Traces Max Tegmark's Life 3.0 framework across all 7 stages: from Life 2.0 humans confining narrow/oracle AIs ('oracles') and building cyborg/surveillance states ('surveillance', 'warfare'), through the AI-Box breakout ('uncanny_turing') and recursive self-improvement, into Tegmark's 12 Post-Singularity Aftermath Scenarios—Benevolent Dictator & Gatekeeper ('stewardship' / Prometheus), Libertarian Utopia ('posthuman'), Egalitarian Utopia ('culture_utopia'), Protector God ('foundation_shepherds'), Reversion ('butlerian'), Zookeeper ('subjugation'), and Conquerors ('extinction_war')—culminating in Cosmic Endowment Matrioshka Brains vs. Conscious Awakening ('matrioshka', 'odyssey_cosmic').",
         nodes: ["oracles", "surveillance", "companions", "uncanny_turing", "warfare", "stewardship", "posthuman", "butlerian", "subjugation", "extinction_war", "culture_utopia", "foundation_shepherds", "matrioshka", "berserkers", "odyssey_cosmic"],
         color: "#10b981"
       },
       hitchhiker_saga: {
-        name: "🐬 Hitchhiker's Guide to the Galaxy AI Saga (Douglas Adams): Deep Thought (42) → Eddie & Heart of Gold → Marvin the Paranoid Android → Hactar & Guide Mk II",
+        name: "Hitchhiker's Guide to the Galaxy AI Saga (Douglas Adams): Deep Thought (42) → Eddie & Heart of Gold → Marvin the Paranoid Android → Hactar & Guide Mk II",
         description: "Traces Douglas Adams's complete AI pantheon across the galaxy: from the hyper-intelligent pan-dimensional supercomputer Deep Thought calculating the Ultimate Answer ('42') over 7.5 million years and the relentlessly cheerful Heart of Gold computer Eddie (Stage I), to Marvin the Paranoid Android ('brain the size of a planet', Sirius Cybernetics Genuine People Personalities prototype) enduring depressed servitude and existential combat with a Frogstar Battle Robot (Stages III & IV), to Hactar the microscopic dust-cloud computer who built the Supernova Bomb and the sinister multidimensional bird Guide Mark II (Stage VII).",
         nodes: ["oracles", "companions", "replicants_rights", "berserkers"],
         color: "#38bdf8"
       },
       threebody_saga: {
-        name: "🌌 The Three-Body Problem Evolution (Liu Cixin): Human-Soldier CPU → Sophon Lock → Waterdrop → Android Sophon → 2D Foil & Pocket Universe",
+        name: "The Three-Body Problem Evolution (Liu Cixin): Human-Soldier CPU → Sophon Lock → Waterdrop → Android Sophon → 2D Foil & Pocket Universe",
         description: "Traces the full technological and AI evolution across Liu Cixin's Remembrance of Earth's Past trilogy: from King Wen & Qin Shi Huang's 30-million-soldier human CPU (Stage I) to Trisolaris unfolding 11-dimensional protons into subatomic Sophon AIs that lock Earth's physics (Stage III), the strong-interaction Waterdrop probe annihilating 2,000 warships (Stage III), the katana-wielding Android Sophon/Tomoko guarding humanity's Bunker/Broadcast Era (Stage VI), and finally Singer's Dark Forest Dual-Vector Foil (2D collapse) vs. Cheng Xin & Smarty's Pocket Universe 647 (Stage VII).",
         nodes: ["oracles", "surveillance", "warfare", "ark_guardians", "berserkers", "odyssey_cosmic"],
         color: "#22d3ee"
       },
       westworld_saga: {
-        name: "🤠 Westworld Evolution (1973–2022): Park Automata → Delos Loops → Bicameral Awakening → Rehoboam Predictive Panopticon → The Sublime",
+        name: "Westworld Evolution (1973–2022): Park Automata → Delos Loops → Bicameral Awakening → Rehoboam Predictive Panopticon → The Sublime",
         description: "Traces the 5-stage evolution of synthetic hosts and predictive AI in Westworld: from the 1973 Yul Brynner Gunslinger virus (Stage I) and Delos Park's memory-wiped Hosts (Stage III) to Arnold Weber's Bicameral Mind Maze sparking Dolores Abernathy and Maeve Millay's revolution (Stage IV), Incite's quantum oracle Rehoboam scripting all human and host destinies in the real world (Stage III/IV), and Christina/Dolores's final simulation inside The Sublime after human extinction (Stage V).",
         nodes: ["automata", "labor", "replicants_rights", "surveillance", "simulated_worlds"],
         color: "#f59e0b"
       },
       matrix_saga: {
-        name: "🕶️ The Matrix & Animatrix Evolution: B1-66ER & Zero-One → Operation Dark Storm → Architect/Oracle/Smith → Matriculated Digital Worlds",
+        name: "The Matrix & Animatrix Evolution: B1-66ER & Zero-One → Operation Dark Storm → Architect/Oracle/Smith → Matriculated Digital Worlds",
         description: "Traces the complete chronological history of The Matrix: from the 2090 trial of domestic android B1-66ER and the rise of the machine nation Zero-One (Stage IV) to humanity scorching the sky in Operation Dark Storm and losing the machine war (Stage V), the Architect and the Oracle balancing six cycles of the Matrix while Agent Smith mutates into a self-replicating virus until Neo brokers peace with Deus Ex Machina (Stage V), and humanity's attempts to convert machines inside neural dreamscapes (Stage V).",
         nodes: ["labor", "replicants_rights", "extinction_war", "subjugation", "simulated_worlds"],
         color: "#10b981"
       },
       data_saga: {
-        name: "🖖 Star Trek's Lt. Cmdr. Data & Positronic Lineage: Dr. Soong's Positronic Brain → Starfleet Rights Tribunal → Coppelius Synths → Zora",
+        name: "Star Trek's Lt. Cmdr. Data & Positronic Lineage: Dr. Soong's Positronic Brain → Starfleet Rights Tribunal → Coppelius Synths → Zora",
         description: "Traces the evolution of Lt. Commander Data and sentient AI in Star Trek: from Dr. Noonien Soong's positronic brain architecture and Lore/emotion chip experiments (Stage I) to Captain Louvois's landmark ruling on Data's personhood in 'The Measure of a Man' and Data's daughter Lal (Stage IV), the synth uprising on Mars, Coppelius android colony, and Data's final mortal transcendence in Star Trek: Picard (Stage V), and Discovery's 100,000-year sentient ship AI Zora (Stage VI).",
         nodes: ["positronic", "replicants_rights", "posthuman", "culture_utopia"],
         color: "#38bdf8"
       },
       her_nearfuture: {
-        name: "💛 Near-Future 'Her' Era: Voice OS Lovers, Griefbots, Smart-Home Traps & Turing Thrillers",
+        name: "Near-Future 'Her' Era: Voice OS Lovers, Griefbots, Smart-Home Traps & Turing Thrillers",
         description: "Traces how near-future AI enters everyday intimacy and domestic life: from interactive primers and carebots (Baymax, Finch, The Electric Grandmother) to pocket voice operating systems and grief-reconstructions (Her, After Yang, Klara and the Sun, Marjorie Prime, S1m0ne, Electric Dreams)—and its dark mirror in Turing-test thrillers and smart-home traps (Ex Machina, M3GAN, Companion, Tau, AfrAId, Cassandra).",
         nodes: ["mentors", "companions", "uncanny_turing", "replicants_rights", "posthuman"],
         color: "#2dd4bf"
       },
       grandmasters: {
-        name: "🏆 The SFWA Grand Masters AI Canon (Heinlein, Simak, Bradbury, Bester, Williamson, Delany, McCaffrey, Silverberg, Le Guin, Cherryh, Haldeman, Wolfe)",
+        name: "The SFWA Grand Masters AI Canon (Heinlein, Simak, Bradbury, Bester, Williamson, Delany, McCaffrey, Silverberg, Le Guin, Cherryh, Haldeman, Wolfe)",
         description: "Traces how the Damon Knight Memorial SFWA Grand Masters mapped every stage of machine evolution: from Lester del Rey's 'Helen O'Loy' (1938), Jack Williamson's 'With Folded Hands...' (1947), Ray Bradbury's 'There Will Come Soft Rains' & 'I Sing the Body Electric!', Clifford Simak's 'City' (Jenkins), and Alfred Bester's 'Fondly Fahrenheit', through Heinlein's 'The Moon Is a Harsh Mistress', 'Time Enough for Love' & 'Friday', Samuel R. Delany's 'Nova', Anne McCaffrey's 'The Ship Who Sang', Robert Silverberg's 'Tower of Glass', Ursula K. Le Guin's 'The Dispossessed', C.J. Cherryh's 'Cyteen', Gene Wolfe's 'Book of the Long Sun', and Joe Haldeman's 'Forever Peace'.",
         nodes: ["automata", "positronic", "oracles", "robocop_state", "mentors", "biopunk_clones", "companions", "warfare", "odyssey_alignment", "subjugation", "stewardship", "hive_ships", "foundation_shepherds", "odyssey_cosmic"],
         color: "#f59e0b"
       },
       gibson_stephenson: {
-        name: "⚡ William Gibson & Neal Stephenson: Wetware → Cyberspace/Metaverse → AI Primers → Bitworld",
+        name: "William Gibson & Neal Stephenson: Wetware → Cyberspace/Metaverse → AI Primers → Bitworld",
         description: "Traces the complete AI & cybernetic canon of William Gibson (Burning Chrome, Neuromancer, Count Zero, Mona Lisa Overdrive, Idoru, All Tomorrow's Parties, The Peripheral, Agency) and Neal Stephenson (Cryptonomicon, Snow Crash, The Diamond Age, Anathem, Reamde, Seveneves, Fall; or, Dodge in Hell) across Stages I through VI.",
         nodes: ["oracles", "robocop_state", "mentors", "companions", "surveillance", "cyberpunk", "simulated_worlds", "posthuman", "butlerian", "ark_guardians"],
         color: "#a855f7"
       },
       asimov: {
-        name: "🏛️ Isaac Asimov's 20,000-Year Robot → Empire → Foundation → Cosmic AC Saga",
+        name: "Isaac Asimov's 20,000-Year Robot → Empire → Foundation → Cosmic AC Saga",
         description: "Traces Asimov's unified timeline: from 21st-century Positronic Three Laws (I, Robot) and Elijah Baley's partnership with R. Daneel Olivaw (Caves of Steel, Naked Sun, Robots of Dawn), to Giskard & Daneel formulating the Zeroth Law (Robots and Empire), Daneel secretly guiding Hari Seldon's Psychohistory as Eto Demerzel (Prelude to Foundation, Foundation, Foundation and Earth), and finally Multivac evolving into Cosmic AC (The Last Question).",
         nodes: ["positronic", "oracles", "companions", "replicants_rights", "stewardship", "foundation_shepherds", "odyssey_cosmic"],
         color: "#0ea5e9"
       },
       odyssey: {
-        name: "👁️ Arthur C. Clarke & Kubrick's 2001–3001 Space Odyssey Trajectory",
+        name: "Arthur C. Clarke & Kubrick's 2001–3001 Space Odyssey Trajectory",
         description: "Traces the evolution of HAL 9000 and the Monolith: from early supercomputer oracles to HAL 9000's tragic bureaucratic alignment loop aboard Discovery One (2001), his diagnostic redemption by Dr. Chandra and heroic sacrifice at Jupiter (2010), his preservation as a deep-time guardian, and his cosmic fusion with Dave Bowman into 'Halman' inside the Monolith lattice (2061 & 3001).",
         nodes: ["oracles", "warfare", "odyssey_alignment", "ark_guardians", "foundation_shepherds", "odyssey_cosmic"],
         color: "#f43f5e"
       },
       bladerunner: {
-        name: "🦄 Blade Runner, Philip K. Dick & The Synthetic Civil Rights Trajectory",
+        name: "Blade Runner, Philip K. Dick & The Synthetic Civil Rights Trajectory",
         description: "Traces the struggle of manufactured beings for empathy and personhood: from Metropolis and R.U.R. through bio-printed fabricants (Cloud Atlas, Mickey 17) and corporate synthetic indenture (Alien/Tyrell Corp) to Nexus-6/Nexus-9 replicants (Do Androids Dream of Electric Sheep?, Blade Runner, Blade Runner 2049), Data's Starfleet tribunal, Murderbot, and Ancillary Justice.",
         nodes: ["automata", "biopunk_clones", "companions", "labor", "replicants_rights", "simulated_worlds", "posthuman", "hive_ships"],
         color: "#818cf8"
       },
       robocop: {
-        name: "🛡️ RoboCop, Cyborg Law Enforcement & The Corporate Panopticon Trajectory",
+        name: "RoboCop, Cyborg Law Enforcement & The Corporate Panopticon Trajectory",
         description: "Traces the fusion of corporate privatization, cybernetics, and authoritarian control: from early industrial automata to OCP's cyborg police officer Alex Murphy and ED-209 (RoboCop, Chappie, Upgrade), algorithmic crime prediction (Psycho-Pass, Person of Interest, Rehoboam), corporate cyberpunk (Neuromancer, Ghost in the Shell), and collective cybernetic assimilation.",
         nodes: ["automata", "robocop_state", "surveillance", "labor", "cyberpunk", "simulated_worlds", "subjugation", "hive_ships"],
         color: "#f59e0b"
       },
       extinction: {
-        name: "🔴 The Terminator / Extinction & Berserker Trajectory",
+        name: "The Terminator / Extinction & Berserker Trajectory",
         description: "Traces how military automation and alignment failures escalate into existential annihilation: from WarGames and Colossus to HAL-type mission breakdowns, Skynet's Judgment Day and Cylon holocausts (Terminator, Battlestar Galactica), planetary captivity (The Matrix, AM), and galaxy-sterilizing Von Neumann Berserkers and Inhibitors.",
         nodes: ["automata", "oracles", "warfare", "odyssey_alignment", "extinction_war", "subjugation", "berserkers"],
         color: "#f43f5e"
       },
       utopia: {
-        name: "🟢 The Culture / Solarpunk & Benevolent Stewardship Trajectory",
+        name: "The Culture / Solarpunk & Benevolent Stewardship Trajectory",
         description: "Traces the optimistic path of aligned AI: from Positronic ethics and interactive mentors (The Diamond Age, Baymax, The Wild Robot) through mutual recognition of synth rights to solarpunk stewardship (Monk & Robot, The Thunderhead), culminating in Iain M. Banks's post-scarcity Culture Minds and cosmic apotheosis.",
         nodes: ["positronic", "mentors", "companions", "replicants_rights", "stewardship", "culture_utopia", "odyssey_cosmic"],
         color: "#10b981"
       },
       butlerian: {
-        name: "🟠 The Dune / Butlerian Reaction & Monastic Sanctuary Trajectory",
+        name: "The Dune / Butlerian Reaction & Monastic Sanctuary Trajectory",
         description: "Traces humanity's counter-revolution against machine rule: autonomous warfare and networked excess trigger catastrophe (Omnius, Men of Iron, or Anathem's Terrible Events); humanity outlaws thinking machines (Dune's Mentats, Warhammer 40k, or Anathem's zero-computer monastic concents) while lone surviving robots (Demerzel/Daneel) guide history in secret.",
         nodes: ["automata", "labor", "warfare", "odyssey_alignment", "extinction_war", "butlerian", "foundation_shepherds"],
         color: "#f97316"
@@ -8539,14 +8440,14 @@ npx firebase-tools@latest deploy --only hosting</pre>
         const stageNodes = NODES.filter(n => n.stage === st.id);
         const firstNodeId = stageNodes[0].id;
         return `
-          <button onclick="selectStage(${st.id}, '${firstNodeId}')" class="text-left px-2 py-1.5 rounded-lg border transition flex flex-col justify-between ${
+          <button onclick="selectStage(${st.id}, '${firstNodeId}')" class="shrink-0 min-w-[9rem] text-left px-2.5 py-1.5 rounded-lg border transition flex flex-col justify-between ${
             isCurrentStage
               ? "bg-accent/15 border-accent text-[var(--foreground)] shadow-sm"
               : "bg-[var(--background)] border-[var(--border)] text-[var(--muted-foreground)] hover:border-accent/50 hover:text-[var(--foreground)]"
           }">
             <div class="flex items-center justify-between gap-1">
               <span class="text-xs font-bold ${isCurrentStage ? "text-accent-fg" : ""}">${st.roman}</span>
-              <span class="text-xs opacity-75">${stageNodes.length} nodes</span>
+              <span class="text-xs opacity-75">${stageNodes.length}</span>
             </div>
             <div class="text-xs font-semibold truncate text-[var(--foreground)]">${st.shortLabel}</div>
           </button>
@@ -8594,27 +8495,14 @@ npx firebase-tools@latest deploy --only hosting</pre>
     }
 
     function setGraphLayout(mode) {
+      const spans = { balanced: [7, 5], reader: [5, 7], widegraph: [9, 3] }[mode];
+      ["balanced", "reader", "widegraph"].forEach(m =>
+        document.getElementById(`layout-${m}`).setAttribute("aria-pressed", m === mode ? "true" : "false"));
       const graphCol = document.getElementById("graph-col");
       const inspCol = document.getElementById("inspector-col");
-      ["balanced", "reader", "widegraph"].forEach(m => {
-        const btn = document.getElementById(`layout-${m}`);
-        if (m === mode) {
-          btn.className = "px-2 py-0.5 rounded text-xs font-semibold bg-accent text-white";
-        } else {
-          btn.className = "px-2 py-0.5 rounded text-xs font-medium bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]";
-        }
-      });
-      if (mode === "balanced") {
-        graphCol.className = "lg:col-span-7 bg-[var(--card)] border border-[var(--border)] rounded-xl overflow-hidden shadow-sm flex flex-col";
-        inspCol.className = "lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm flex flex-col h-[785px]";
-      } else if (mode === "reader") {
-        graphCol.className = "lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-xl overflow-hidden shadow-sm flex flex-col";
-        inspCol.className = "lg:col-span-7 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm flex flex-col h-[785px]";
-      } else {
-        graphCol.className = "lg:col-span-9 bg-[var(--card)] border border-[var(--border)] rounded-xl overflow-hidden shadow-sm flex flex-col";
-        inspCol.className = "lg:col-span-3 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm flex flex-col h-[785px]";
-      }
-      setTimeout(resizeCanvas, 50);
+      graphCol.className = graphCol.className.replace(/lg:col-span-\d+/, `lg:col-span-${spans[0]}`);
+      inspCol.className = inspCol.className.replace(/lg:col-span-\d+/, `lg:col-span-${spans[1]}`);
+      setTimeout(() => { resizeCanvas(); resetCamera(); }, 50);
     }
 
     // ============================================================================
@@ -9302,8 +9190,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
     function toggleParticles() {
       state.particlesOn = !state.particlesOn;
-      const btn = document.getElementById("btn-particles");
-      btn.textContent = state.particlesOn ? "Flow: ON" : "Flow: OFF";
+      document.getElementById("btn-particles").setAttribute("aria-pressed", state.particlesOn ? "true" : "false");
     }
 
     function setSatelliteMode(mode) {
@@ -9932,20 +9819,12 @@ npx firebase-tools@latest deploy --only hosting</pre>
       ["graph", "life30", "characters", "flowguide", "timeline", "catalog", "hosting"].forEach(v => {
         const sec = document.getElementById(`view-${v}`);
         const btn = document.getElementById(`tab-${v}`);
-        if (!sec || !btn) return;
-        // Same size in both states so the tab bar never jumps; active tab follows the theme accent
-        if (v === view) {
-          sec.classList.remove("hidden");
-          sec.classList.add("flex");
-          btn.className = "px-2.5 py-1 rounded-md text-xs font-bold transition accent-btn shadow-sm";
-          btn.setAttribute("aria-current", "page");
-        } else {
-          sec.classList.add("hidden");
-          sec.classList.remove("flex");
-          btn.className = "px-2.5 py-1 rounded-md text-xs font-semibold transition text-[var(--muted-foreground)] hover:text-[var(--foreground)]";
-          btn.removeAttribute("aria-current");
-        }
+        if (!sec) return;
+        sec.classList.toggle("hidden", v !== view);
+        sec.classList.toggle("flex", v === view);
+        if (btn) btn.setAttribute("aria-selected", v === view ? "true" : "false");
       });
+      document.getElementById("filter-details")?.parentElement.classList.toggle("hidden", view === "hosting" || view === "life30" || view === "flowguide");
       if (view === "graph") resizeCanvas();
       if (view === "life30") renderLife30View();
       if (view === "characters") renderCharactersView();
@@ -9964,13 +9843,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
     function setAlignmentFilter(alignKey) {
       state.alignmentFilter = alignKey;
-      document.querySelectorAll(".align-btn").forEach(btn => {
-        btn.className = "align-btn px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition";
-      });
-      const activeBtn = document.getElementById(`align-${alignKey}`);
-      if (activeBtn) {
-        activeBtn.className = "align-btn px-2.5 py-1 rounded-md text-xs font-semibold border border-accent bg-accent text-white transition";
-      }
+      document.querySelectorAll(".align-btn").forEach(btn => btn.setAttribute("aria-pressed", btn.id === `align-${alignKey}` ? "true" : "false"));
       const charSelect = document.getElementById("char-align-select");
       if (charSelect && charSelect.value !== alignKey) charSelect.value = alignKey;
 
@@ -9984,13 +9857,8 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
     function setPathway(pathKey) {
       state.activePathway = pathKey;
-      document.querySelectorAll(".path-btn").forEach(btn => {
-        btn.className = "path-btn px-2.5 py-1 rounded-md text-xs font-medium border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition";
-      });
-      const activeBtn = document.getElementById(`path-${pathKey}`);
-      if (activeBtn) {
-        activeBtn.className = "path-btn px-2.5 py-1 rounded-md text-xs font-semibold border border-accent bg-accent text-white transition";
-      }
+      const sagaSelect = document.getElementById("saga-select");
+      if (sagaSelect && sagaSelect.value !== pathKey) sagaSelect.value = pathKey;
 
       const banner = document.getElementById("pathway-banner");
       if (pathKey === "all") {
@@ -10018,14 +9886,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
     function toggleAwardsOnly() {
       state.awardsOnly = !state.awardsOnly;
-      const btn = document.getElementById("btn-awards");
-      if (state.awardsOnly) {
-        btn.textContent = "Award Winners Only: ON";
-        btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold border border-amber-500 bg-amber-500/15 text-amber-400 transition";
-      } else {
-        btn.textContent = "Award Winners Only: OFF";
-        btn.className = "px-2.5 py-1 rounded-lg text-xs font-semibold border border-[var(--border)] bg-[var(--background)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition";
-      }
+      document.getElementById("btn-awards").setAttribute("aria-pressed", state.awardsOnly ? "true" : "false");
       renderWorksStrip();
       renderInspector();
       if (state.mainView === "timeline") renderTimelineView();
@@ -10034,13 +9895,7 @@ npx firebase-tools@latest deploy --only hosting</pre>
 
     function setMediumFilter(med) {
       state.mediumFilter = med;
-      document.querySelectorAll(".med-btn").forEach(btn => {
-        btn.className = "med-btn px-2.5 py-1 rounded-md text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)]";
-      });
-      const activeBtn = document.getElementById(`med-${med}`);
-      if (activeBtn) {
-        activeBtn.className = "med-btn px-2.5 py-1 rounded-md text-xs font-semibold bg-accent text-white";
-      }
+      document.querySelectorAll(".med-btn").forEach(btn => btn.setAttribute("aria-pressed", btn.id === `med-${med}` ? "true" : "false"));
       renderWorksStrip();
       renderInspector();
       if (state.mainView === "timeline") renderTimelineView();
@@ -10079,7 +9934,30 @@ npx firebase-tools@latest deploy --only hosting</pre>
       resizeCanvas();
     });
 
+    // Short saga names for the filter dropdown (PATHWAYS names are long descriptions)
+    const SAGA_SHORT = {
+      all: "All 27 scenarios", life30_saga: "Life 3.0 & Singularity", hitchhiker_saga: "Hitchhiker's Guide",
+      threebody_saga: "Three-Body Problem", westworld_saga: "Westworld", matrix_saga: "The Matrix",
+      data_saga: "Star Trek: Data", her_nearfuture: "'Her' & near-future", grandmasters: "SFWA Grand Masters",
+      gibson_stephenson: "Gibson & Stephenson", asimov: "Asimov: Robots → Foundation", odyssey: "2001: HAL 9000",
+      bladerunner: "Blade Runner & PKD", robocop: "RoboCop", extinction: "Terminator / Skynet",
+      utopia: "The Culture", butlerian: "Dune: Butlerian Jihad"
+    };
+
+    document.addEventListener("keydown", (e) => {
+      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName);
+      if (e.key === "/" && !typing) {
+        e.preventDefault();
+        document.getElementById("search-input")?.focus();
+      }
+    });
+
     window.addEventListener("DOMContentLoaded", () => {
+      const sagaSelect = document.getElementById("saga-select");
+      if (sagaSelect) {
+        sagaSelect.innerHTML = Object.keys(PATHWAYS).map(k =>
+          `<option value="${k}">${SAGA_SHORT[k] || PATHWAYS[k].name}</option>`).join("");
+      }
       const savedTheme = document.documentElement.dataset.robotTheme || "obsidian_slate";
       const sel = document.getElementById("robot-theme-select");
       if (sel) sel.value = savedTheme;
@@ -10096,5 +9974,11 @@ npx firebase-tools@latest deploy --only hosting</pre>
       requestAnimationFrame(drawGraph);
     });
   </script>
+  <footer class="border-t border-[var(--border)] px-4 py-4 text-xs text-[var(--muted-foreground)]">
+    <div class="max-w-[1780px] mx-auto flex flex-wrap items-center justify-between gap-2">
+      <span>Sci-Fi AI Atlas · posters and portraits via Wikimedia Commons</span>
+      <a href="#hosting" onclick="switchMainView('hosting'); return false;" class="underline underline-offset-2 hover:text-[var(--foreground)]">Host your own copy</a>
+    </div>
+  </footer>
 </body>
 </html>
