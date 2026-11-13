@@ -960,7 +960,7 @@
             <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 robot-mono">ZERO-BACKEND SINGLE-FILE ARCHITECTURE • READY TO DEPLOY</span>
             <h2 class="text-xl font-bold text-[var(--foreground)] mt-1">🚀 How to Host &amp; Share Your Sci-Fi AI Evolution Atlas Online</h2>
             <p class="text-sm text-[var(--muted-foreground)] mt-1">
-              This entire interactive application (<code class="px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-cyan-400">/Users/tuandinh/Scifi/scifi-ai-atlas/index.html</code>) is a self-contained static HTML5 bundle with all 27 nodes, 64 causal edges, 108 AI personalities, and 237 works embedded inside. It requires <strong>no database or server runtime</strong> and can be hosted for free in under 60 seconds.
+              This entire interactive application (<code class="px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-cyan-400">scifi-ai-atlas/index.html</code>) is a self-contained static HTML5 bundle with all 27 nodes, 64 causal edges, 108 AI personalities, and 237 works embedded inside. It requires <strong>no database or server runtime</strong> and can be hosted for free in under 60 seconds.
             </p>
           </div>
         </div>
@@ -975,9 +975,9 @@
               </div>
               <h3 class="text-base font-bold text-[var(--foreground)]">1. Netlify Drop (Drag &amp; Drop Folder)</h3>
               <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">
-                Open <strong>app.netlify.com/drop</strong> in your browser and drag the <code class="text-cyan-400">/Users/tuandinh/Scifi/scifi-ai-atlas</code> folder directly onto the page. Netlify instantly publishes a shareable <code class="text-emerald-300">https://your-name.netlify.app</code> link.
+                Open <strong>app.netlify.com/drop</strong> in your browser and drag the <code class="text-cyan-400">scifi-ai-atlas</code> folder directly onto the page. Netlify instantly publishes a shareable <code class="text-emerald-300">https://your-name.netlify.app</code> link.
               </p>
-              <pre class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-cyan-300 font-mono overflow-x-auto"># Or deploy via CLI from /Users/tuandinh/Scifi/scifi-ai-atlas:
+              <pre class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-cyan-300 font-mono overflow-x-auto"># Or deploy via CLI from scifi-ai-atlas:
 npx netlify-cli deploy --prod --dir=.</pre>
             </div>
           </div>
@@ -991,9 +991,9 @@ npx netlify-cli deploy --prod --dir=.</pre>
               </div>
               <h3 class="text-base font-bold text-[var(--foreground)]">2. GitHub Pages (Free Static Hosting)</h3>
               <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">
-                Push <code class="text-cyan-400">/Users/tuandinh/Scifi/scifi-ai-atlas</code> to a GitHub repository, then enable <strong>Settings → Pages → Deploy from branch (main)</strong>.
+                Push <code class="text-cyan-400">scifi-ai-atlas</code> to a GitHub repository, then enable <strong>Settings → Pages → Deploy from branch (main)</strong>.
               </p>
-              <pre class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-cyan-300 font-mono overflow-x-auto">cd /Users/tuandinh/Scifi/scifi-ai-atlas
+              <pre class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-cyan-300 font-mono overflow-x-auto">cd scifi-ai-atlas
 git init &amp;&amp; git add index.html scifi_ai_evolution_atlas.md
 git commit -m "Deploy Sci-Fi AI Evolution Atlas"
 gh repo create scifi-ai-atlas --public --source=. --push</pre>
@@ -1009,13 +1009,13 @@ gh repo create scifi-ai-atlas --public --source=. --push</pre>
               </div>
               <h3 class="text-base font-bold text-[var(--foreground)]">3. Vercel or Cloudflare Pages</h3>
               <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">
-                We pre-generated <code class="text-cyan-400">vercel.json</code> and <code class="text-cyan-400">netlify.toml</code> inside <code class="text-cyan-400">/Users/tuandinh/Scifi/scifi-ai-atlas/</code> so you can deploy with a single terminal command:
+                We pre-generated <code class="text-cyan-400">vercel.json</code> and <code class="text-cyan-400">netlify.toml</code> inside <code class="text-cyan-400">scifi-ai-atlas/</code> so you can deploy with a single terminal command:
               </p>
               <pre class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-cyan-300 font-mono overflow-x-auto"># Deploy with Vercel:
-cd /Users/tuandinh/Scifi/scifi-ai-atlas &amp;&amp; npx vercel --prod
+cd scifi-ai-atlas &amp;&amp; npx vercel --prod
 
 # Or deploy with Cloudflare Wrangler:
-npx wrangler pages deploy /Users/tuandinh/Scifi/scifi-ai-atlas</pre>
+npx wrangler pages deploy scifi-ai-atlas</pre>
             </div>
           </div>
 
@@ -1028,9 +1028,9 @@ npx wrangler pages deploy /Users/tuandinh/Scifi/scifi-ai-atlas</pre>
               </div>
               <h3 class="text-base font-bold text-[var(--foreground)]">4. Firebase Hosting (<code class="text-xs">firebase.json</code> Included)</h3>
               <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">
-                A ready-to-use <code class="text-cyan-400">firebase.json</code> is already saved inside <code class="text-cyan-400">/Users/tuandinh/Scifi/scifi-ai-atlas/firebase.json</code>.
+                A ready-to-use <code class="text-cyan-400">firebase.json</code> is already saved inside <code class="text-cyan-400">scifi-ai-atlas/firebase.json</code>.
               </p>
-              <pre class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-cyan-300 font-mono overflow-x-auto">cd /Users/tuandinh/Scifi/scifi-ai-atlas
+              <pre class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-xs text-cyan-300 font-mono overflow-x-auto">cd scifi-ai-atlas
 npx firebase-tools@latest deploy --only hosting</pre>
             </div>
           </div>

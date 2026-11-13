@@ -1,11 +1,8 @@
 # 🤖 The Sci-Fi AI Evolution Atlas (27 Scenarios • 241 Works • 112 AI Personalities)
 
-> [!IMPORTANT]
-> **Dedicated Subfolder & How to Open / Host Online**
-> All Sci-Fi AI Evolution Atlas files live in their own isolated subfolder (`/Users/tuandinh/Scifi/scifi-ai-atlas/`) so they never mix with your Tank Encyclopedia in `/Users/tuandinh/Scifi/`.
-> 1. **Interactive Web Application (Subfolder File)**: [index.html](file:///Users/tuandinh/Scifi/scifi-ai-atlas/index.html) — Live at `http://localhost:8765/scifi-ai-atlas/`
-> 2. **Interactive Web Application (Artifact Panel)**: [scifi_ai_futures_network.html](file:///Users/tuandinh/.gemini/antigravity/brain/591ad74c-f8ac-4684-8b93-c045fcfbeca1/scifi_ai_futures_network.html)
-> 3. **Complete Markdown Reference Atlas**: [scifi_ai_evolution_atlas.md](file:///Users/tuandinh/Scifi/scifi-ai-atlas/scifi_ai_evolution_atlas.md)
+> [!NOTE]
+> **Interactive version:** https://tuanucsb.github.io/scifi-ai-atlas/
+> This file is the plain-markdown reference for the same atlas; `index.html` in this folder is the interactive app.
 
 ## 🌌 0. Multi-Stage Evolution Trackers: *Hitchhiker's Guide*, *Three-Body Problem*, *Westworld*, *The Matrix* & *Data*
 
